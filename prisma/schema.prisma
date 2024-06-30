@@ -12,3 +12,169 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+// TABLE USER
+model User {
+  id        String    @id @default(uuid())
+  name      String
+  lastname  String
+  email     String    @unique
+  password  String
+  role      Role      @default(MODERATOR)
+  status    Status    @default(ACTIVE)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+}
+
+// TABLE EMPLOYEE
+model Employee {
+  id         String    @id @default(uuid())
+  name       String
+  lastname   String
+  positionId String
+  salary     String
+  status     Status    @default(ACTIVE)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime? @updatedAt
+
+  // NAVIGATION PROPERTYS
+  payroll     Payroll[]
+  performance Performance[]
+  leave       Leave[]
+  license     License[]
+  position    Position      @relation(fields: [positionId], references: [id])
+}
+
+// TABLE POSITION
+model Position {
+  id           String @id @default(uuid())
+  name         String @unique
+  description  String
+  departmentId String
+
+  // NAVIGATION PROPERTYS
+  department Department @relation(fields: [departmentId], references: [id])
+  employee   Employee[]
+}
+
+// TABLE DEPARTMENT
+model Department {
+  id   String @id @default(uuid())
+  name String @unique
+  code String @unique
+
+  // NAVIGATION PROPERTYS
+  position Position[]
+  reviewer Reviewer?
+}
+
+// TABLE PAYROLL
+model Payroll {
+  id         String    @id @default(uuid())
+  amount     Float
+  date       String
+  status     Status    @default(ACTIVE)
+  employeeId String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime? @updatedAt
+
+  // NAVIGATION PROPERTYS
+  employee Employee @relation(fields: [employeeId], references: [id])
+}
+
+// TABLE PERFORMANCE
+model Performance {
+  id         String    @id @default(uuid())
+  score      Score
+  comments   String
+  date       String
+  status     Status    @default(ACTIVE)
+  employeeId String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime? @updatedAt
+
+  // NAVIGATION PROPERTYS
+  reviewer Reviewer[]
+  employee Employee   @relation(fields: [employeeId], references: [id])
+}
+
+// TABLE REVIEWER
+model Reviewer {
+  id            String    @id @default(uuid())
+  name          String
+  performanceId String
+  departmentId  String    @unique
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime? @updatedAt
+
+  // NAVIGATION PROPERTYS
+  department  Department  @relation(fields: [departmentId], references: [id])
+  performance Performance @relation(fields: [performanceId], references: [id])
+}
+
+// TABLE LEAVE
+model Leave {
+  id         String    @id @default(uuid())
+  employeeId String
+  startDate  String
+  endDate    String
+  reason     String
+  status     Progress  @default(PENDING)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime? @updatedAt
+
+  // NAVIGATION PROPERTYS
+  employee Employee @relation(fields: [employeeId], references: [id])
+}
+
+// TABLE LICENSE
+model License {
+  id         String    @id @default(uuid())
+  employeeId String
+  startDate  String
+  endDate    String
+  reason     String
+  status     Progress  @default(PENDING)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime? @updatedAt
+
+  // NAVIGATION PROPERTYS
+  employee Employee @relation(fields: [employeeId], references: [id])
+}
+
+// TABLE REPORT
+model Report {
+  id        String    @id @default(uuid())
+  title     String
+  content   String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+}
+
+
+// ENUMS TABLES
+
+enum Role {
+  ADMIN
+  MODERATOR
+}
+
+enum Status {
+  ACTIVE
+  INACTIVE
+}
+
+enum Progress {
+  REJECTED
+  APPROVED
+  PENDING
+}
+
+enum Score {
+  CERO
+  UNO
+  DOS
+  TRES
+  CUATRO
+  CINCO
+}
