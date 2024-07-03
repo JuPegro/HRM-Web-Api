@@ -4,8 +4,8 @@ import morgan from "morgan";
 import cors from "cors";
 import dotenv from "dotenv";
 
-// IMPORT MIDDLEWARES
-import ensureUsersExist from "./middlewares/ensureUsersExist.js";
+// IMPORT CREATE INITIAL USERS
+import "./libs/initialSetup.js";
 
 // CREATE SERVER
 const app = express();
@@ -24,9 +24,6 @@ app.use(cors());
 
 // SEE ENVIROMENT VARIABLES
 dotenv.config();
-
-// USE MIDDLEWARES
-app.use(ensureUsersExist);
 
 app.get('/', (req, res) => {
     res.send('WORKING...')
