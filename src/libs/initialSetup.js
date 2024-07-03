@@ -19,10 +19,12 @@ const prisma = new PrismaClient();
 
 export const createUsers = async () => {
   try {
+    // FOUND DEFAULT ADMIN USER APP
     const user = await prisma.user.findUnique({
       where: { email: ADMIN_EMAIL },
     });
 
+    // IF NOT FOUND 
     if (!user) {
       const encrypPassword = await bcrypt.hash(ADMIN_PASSWORD, SALT_ROUNDS);
       await prisma.user.create({

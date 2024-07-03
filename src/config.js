@@ -6,4 +6,6 @@ export const {
   ADMIN_EMAIL,
   ADMIN_PASSWORD,
   ADMIN_ROLE,
+  SECRET_TOKEN,
+  SECURE_COOKIE
 } = process.env;

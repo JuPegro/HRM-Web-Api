@@ -3,9 +3,13 @@ import express from "express";
 import morgan from "morgan";
 import cors from "cors";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 
 // IMPORT CREATE INITIAL USERS
 import "./libs/initialSetup.js";
+
+// IMPORT ROUTES
+import authRoutes from './routes/auth.routes.js'
 
 // CREATE SERVER
 const app = express();
@@ -22,16 +26,18 @@ app.use(morgan("dev"));
 // SET CORS
 app.use(cors());
 
+// SET MIDDLEWARE COOKIES
+app.use(cookieParser());
+
 // SEE ENVIROMENT VARIABLES
 dotenv.config();
+
+// SET ROUTES
+app.use('/api/auth', authRoutes);
 
 app.get('/', (req, res) => {
     res.send('WORKING...')
 })
-
-// IMPORT ROUTES
-
-// SET ROUTES
 
 // EXPORT MODULE
 export default app;
