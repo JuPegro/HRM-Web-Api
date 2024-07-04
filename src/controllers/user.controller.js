@@ -57,12 +57,16 @@ export const deleteUser = async (req, res, next) => {};
 // GET ALL USER
 export const getUsers = async (req, res, next) => {
   try {
+    // GET USERS IN DATABASE
     const users = await prisma.user.findMany();
 
-    if (users.leght === 0)
+    if (users.lenght === 0)
       return res.status(404).json({ message: "Users not found!" });
 
-      return res.status(200).json({users})
+    // OMIT PASSWORD
+    const publicUsers = users.map(({ password, ...user }) => user);
+
+    return res.status(200).json({ users: publicUsers });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
