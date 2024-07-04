@@ -41,7 +41,7 @@ export const createUser = async (req, res, next) => {
 
     // SUCCESSFULLY
     return res
-      .status(200)
+      .status(201)
       .json({ message: "Created user successfully", publicUser });
   } catch (error) {
     return res.status(500).json({ error: error.message });
@@ -73,7 +73,26 @@ export const getUsers = async (req, res, next) => {
 };
 
 // GET AN USER
-export const getUserById = async (req, res, next) => {};
+export const getUserById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    // CHECK PROVIDED ID
+    if (!id) return res.status(400).json({ message: "Id not provided" });
+
+    const user = await prisma.user.findUnique({ where: { id: id } });
+
+    // CHECK USER FOUND
+    if (!user) return res.status(404).json({ message: "User not found!" });
+
+    // OMIT PASSWORD
+    const { password: _, ...publicUser } = user;
+
+    return res.status(200).json({ user: publicUser });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
 
 // CHANGE STATUS OF USER BY ID
 export const changeStatusUser = async (req, res, next) => {};
