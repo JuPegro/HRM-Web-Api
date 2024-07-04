@@ -55,7 +55,18 @@ export const updateUser = async (req, res, next) => {};
 export const deleteUser = async (req, res, next) => {};
 
 // GET ALL USER
-export const getUsers = async (req, res, next) => {};
+export const getUsers = async (req, res, next) => {
+  try {
+    const users = await prisma.user.findMany();
+
+    if (users.leght === 0)
+      return res.status(404).json({ message: "Users not found!" });
+
+      return res.status(200).json({users})
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
 
 // GET AN USER
 export const getUserById = async (req, res, next) => {};
