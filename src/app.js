@@ -10,6 +10,7 @@ import "./libs/initialSetup.js";
 
 // IMPORT ROUTES
 import authRoutes from './routes/auth.routes.js'
+import userRoutes from './routes/user.routes.js'
 
 // CREATE SERVER
 const app = express();
@@ -34,6 +35,7 @@ dotenv.config();
 
 // SET ROUTES
 app.use('/api/auth', authRoutes);
+app.use('/api', userRoutes);
 
 app.get('/', (req, res) => {
     res.send('WORKING...')
