@@ -49,7 +49,58 @@ export const createUser = async (req, res, next) => {
 };
 
 // UPDATE AN USER
-export const updateUser = async (req, res, next) => {};
+export const updateUser = async (req, res, next) => {
+  try {
+    // GET USER ID
+    const { id } = req.params;
+
+    // CHECK ID PROVIDED
+    if (!id) return res.status(400).json({ message: "Id not provided" });
+
+    // VALIDATE BODY WITH JOI
+    const { error, value } = userValidation.validate(req.body);
+
+    // VALIDATE EMPTY FIELDS
+    if (error) return res.status(400).json({ error: error.details[0].message });
+
+    /* THIS IS LOOKING FOR A DOCTOR WHO HAS THE SAME VALUE 
+      INTRODUCED IN THE BODY FOR THE FIELDS [EMAIL] */
+    const uniqueField = await prisma.user.findFirst({
+      where: {
+        NOT: { id: id }, // EXCLUDE CURRENT DOCTOR FROM SEARCH
+        AND: [{ email: value.email }],
+      },
+    });
+
+    // ENCRYPT PASSWORD
+    const hashPassword = await bcrypt.hash(value.password, SALT_ROUNDS);
+
+    // CHECK EMAIL ALREADY USE
+    if (uniqueField)
+      return res.status(400).json({ message: "Email is already in use!" });
+
+    // UPDATE USER IN DATABASE
+    const user = await prisma.user.update({
+      where: {
+        id: id,
+      },
+      data: {
+        name: value.name,
+        lastname: value.lastname,
+        email: value.email,
+        password: hashPassword,
+        role: value.role,
+      },
+    });
+
+    // OMIT PASSWORD
+    const {password: _, ...publicUser} = user;
+
+    return res.status(202).json({ message: "Updated user sucessfully", publicUser });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
 
 // DELETE AN USER
 export const deleteUser = async (req, res, next) => {};
