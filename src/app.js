@@ -5,12 +5,16 @@ import cors from "cors";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 
+// IMPORT SWAGGER CONFIG
+import swaggerUI from "swagger-ui-express";
+import swaggerSpec from './libs/swagger.js'
+
 // IMPORT CREATE INITIAL USERS
 import "./libs/initialSetup.js";
 
 // IMPORT ROUTES
-import authRoutes from './routes/auth.routes.js'
-import userRoutes from './routes/user.routes.js'
+import authRoutes from "./routes/auth.routes.js";
+import userRoutes from "./routes/user.routes.js";
 
 // CREATE SERVER
 const app = express();
@@ -34,12 +38,15 @@ app.use(cookieParser());
 dotenv.config();
 
 // SET ROUTES
-app.use('/api/auth', authRoutes);
-app.use('/api', userRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api", userRoutes);
 
-app.get('/', (req, res) => {
-    res.send('WORKING...')
-})
+// SERVER SWAGGER DOCUMENTACION 
+app.use('/api-docs/v1', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
+
+app.get("/", (req, res) => {
+  res.send("WORKING...");
+});
 
 // EXPORT MODULE
 export default app;
