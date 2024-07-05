@@ -109,12 +109,15 @@ export const deleteUser = async (req, res, next) => {
   try {
     const { id } = req.params;
 
+    // CHECK ID PROVIDED
     if (!id) return res.status(400).json({ message: "Id not provided!" });
 
+    // FOUND USER
     const user = await prisma.user.findUnique({ where: { id: id } });
 
     if (!user) return res.status(404).json({ message: "User not found!" });
 
+    // DELETE USER IN DATABASE
     await prisma.user.delete({
       where: { id: id },
     });
@@ -166,4 +169,28 @@ export const getUserById = async (req, res, next) => {
 };
 
 // CHANGE STATUS OF USER BY ID
-export const changeStatusUser = async (req, res, next) => {};
+export const changeStatusUser = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    // CHECK PROVIDED ID
+    if (!id) return res.status(400).json({ message: "Id not provided" });
+
+    // GET DATA USER
+    const user = await prisma.user.findUnique({ where: { id: id } });
+
+    // CHANGE STATUS WITH TERNARY
+    const change = await prisma.user.update({
+      where: { id: id },
+      data: {
+        status: user.status === "ACTIVE" ? "INACTIVE" : "ACTIVE",
+      },
+    });
+
+    return res
+      .status(200)
+      .json({ message: `Status change to ${change.status}` });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
