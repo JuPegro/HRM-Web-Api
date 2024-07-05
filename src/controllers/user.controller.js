@@ -94,16 +94,36 @@ export const updateUser = async (req, res, next) => {
     });
 
     // OMIT PASSWORD
-    const {password: _, ...publicUser} = user;
+    const { password: _, ...publicUser } = user;
 
-    return res.status(202).json({ message: "Updated user sucessfully", publicUser });
+    return res
+      .status(202)
+      .json({ message: "Updated user sucessfully", publicUser });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
 };
 
 // DELETE AN USER
-export const deleteUser = async (req, res, next) => {};
+export const deleteUser = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) return res.status(400).json({ message: "Id not provided!" });
+
+    const user = await prisma.user.findUnique({ where: { id: id } });
+
+    if (!user) return res.status(404).json({ message: "User not found!" });
+
+    await prisma.user.delete({
+      where: { id: id },
+    });
+
+    return res.status(200).json({ message: "Deleted user successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
 
 // GET ALL USER
 export const getUsers = async (req, res, next) => {

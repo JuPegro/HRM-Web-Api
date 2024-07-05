@@ -26,7 +26,7 @@ export const verifyToken = async (req, res, next) => {
     // NEXT MIDDLEWARE
     next();
   } catch (error) {
-    return res.status(401).json({ message: "Unauthorized!" });
+    return res.status(500).json({ message: error.message });
   }
 };
 
@@ -39,7 +39,7 @@ export const isAdmin = async (req, res, next) => {
 
     return res.status(403).json({ message: "Require Admin Role" });
   } catch (error) {
-    return res.status(401).json({ message: "Unauthorized!" });
+    return res.status(500).json({ message: error.message });
   }
 };
 
@@ -52,6 +52,6 @@ export const isModerator = async (req, res, next) => {
 
     return res.status(403).json({ message: "Require Moderator Role" });
   } catch (error) {
-    return res.status(401).json({ message: "Unauthorized!" });
+    return res.status(500).json({ message: error.message });
   }
 };
