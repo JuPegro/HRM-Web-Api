@@ -39,9 +39,8 @@ export const signin = async (req, res, next) => {
     // OMIT PASSWORD
     const { password: _, ...user } = userFound;
 
-    res.status(200).json({ user, token });
+    return res.status(200).json({ user, token });
   } catch (error) {
-    console.log(error);
-    next(error);
+    return res.status(500).json({message: error.message})
   }
 };

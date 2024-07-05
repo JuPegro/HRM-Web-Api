@@ -32,13 +32,12 @@ import * as authCtrl from "../controllers/auth.controller.js";
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 token:
- *                   type: string
- *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+ *               $ref: '#/components/schemas/SignInResponse'
  *       400:
- *         description: Invalid username or password
+ *         description: Invalid email or password
+ *       500:
+ *         description: Internal server error 
+ * 
  */
 
 router.post("/signin", authCtrl.signin);

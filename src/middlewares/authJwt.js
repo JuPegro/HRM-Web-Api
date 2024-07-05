@@ -6,15 +6,20 @@ const prisma = new PrismaClient();
 
 export const verifyToken = async (req, res, next) => {
   // GET TOKEN FROM HEADERS
-  let token = req.headers["x_access_token"];
+  let token = req.headers["authorization"];
 
   if (!token) return res.status(403).json({ message: "No token provided" });
+
   try {
-    // VERIFY IS A REALLY TOKEN
+    // VERIFY IF IT'S A VALID TOKEN
+    if (token.startsWith("Bearer ")) {
+      token = token.slice(7, token.length);
+    }
+
     const decoded = jwt.verify(token, SECRET_TOKEN);
     req.id = decoded.id;
 
-    // FOUND USER
+    // FIND USER IN DATABASE
     const user = await prisma.user.findUnique({
       where: {
         id: req.id,
@@ -23,10 +28,10 @@ export const verifyToken = async (req, res, next) => {
 
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    // NEXT MIDDLEWARE
+    // MOVE TO NEXT MIDDLEWARE
     next();
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: "Failed to authenticate token" });
   }
 };
 
@@ -35,7 +40,10 @@ export const isAdmin = async (req, res, next) => {
     // FOUND USER WITH REQ.ID OF VERIFYTOKEN
     const user = await prisma.user.findUnique({ where: { id: req.id } });
 
-    if (user.role === "ADMIN") next();
+    if (user.role === "ADMIN") {
+      next();
+      return;
+    }
 
     return res.status(403).json({ message: "Require Admin Role" });
   } catch (error) {
@@ -48,7 +56,10 @@ export const isModerator = async (req, res, next) => {
     // FOUND USER WITH REQ.ID OF VERIFYTOKEN
     const user = await prisma.user.findUnique({ where: { id: req.id } });
 
-    if (user.role === "MODERATOR") next();
+    if (user.role === "MODERATOR") {
+      next();
+      return;
+    }
 
     return res.status(403).json({ message: "Require Moderator Role" });
   } catch (error) {
