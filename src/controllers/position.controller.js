@@ -20,9 +20,7 @@ export const createPosition = async (req, res, nex) => {
 
     // IF UNIQUE FIELDS IN BODY
     if (uniqueField)
-      return res
-        .status(400)
-        .json({ message: "Position name already in use!" });
+      return res.status(400).json({ message: "Position name already in use!" });
 
     const position = await prisma.position.create({
       data: value,
