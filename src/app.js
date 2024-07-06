@@ -16,7 +16,7 @@ import "./libs/initialSetup.js";
 import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/user.routes.js";
 import positionRoutes from "./routes/position.routes.js";
-import departmentRoutes from "./routes/position.routes.js";
+import departmentRoutes from "./routes/department.routes.js";
 
 // CREATE SERVER
 const app = express();

@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "Department" ADD COLUMN     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ADD COLUMN     "status" "Status" NOT NULL DEFAULT 'ACTIVE',
+ADD COLUMN     "updatedAt" TIMESTAMP(3);

@@ -2,7 +2,7 @@ import Joi from "joi";
 
 // DEFINE THE VALIDATION SCHEME
 export const departmentValidation = Joi.object({
-  name: Joi.string().min(3).max(20).required().messages({
+  name: Joi.string().min(3).max(50).required().messages({
     "string.base": "Name must be a string",
     "string.empty": "Name is required",
     "string.min": "Name must be at least 3 characters long",

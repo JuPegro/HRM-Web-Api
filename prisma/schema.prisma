@@ -59,13 +59,15 @@ model Position {
 
 // TABLE DEPARTMENT
 model Department {
-  id   String @id @default(uuid())
-  name String @unique
-  code String @unique
-
+  id        String     @id @default(uuid())
+  name      String     @unique
+  code      String     @unique
+  status    Status     @default(ACTIVE)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime?  @updatedAt
   // NAVIGATION PROPERTYS
-  position Position[]
-  reviewer Reviewer?
+  position  Position[]
+  reviewer  Reviewer?
 }
 
 // TABLE PAYROLL
@@ -150,7 +152,6 @@ model Report {
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
 }
-
 
 // ENUMS TABLES
 
