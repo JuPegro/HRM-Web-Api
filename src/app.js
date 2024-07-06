@@ -15,6 +15,7 @@ import "./libs/initialSetup.js";
 // IMPORT ROUTES
 import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/user.routes.js";
+import positionRoutes from "./routes/position.routes.js";
 
 // CREATE SERVER
 const app = express();
@@ -38,8 +39,9 @@ app.use(cookieParser());
 dotenv.config();
 
 // SET ROUTES
-app.use("/api/auth", authRoutes);
 app.use("/api", userRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api", positionRoutes);
 
 // SERVER SWAGGER DOCUMENTACION 
 app.use('/api-docs/v1', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
