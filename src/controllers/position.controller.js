@@ -74,7 +74,31 @@ export const getPositionById = async (req, res, nex) => {
 export const updatePosition = async (req, res, nex) => {};
 
 // DELETE A POSITION
-export const deletePosition = async (req, res, nex) => {};
+export const deletePosition = async (req, res, nex) => {
+  try {
+    const { id } = req.params;
+
+    // CHECK ID PROVIDED
+    if (!id) return res.status(400).json({ message: "Id not provided!" });
+
+    // FIND POSITION
+    const position = await prisma.position.findUnique({
+      where: { id: id },
+    });
+
+    if (!position)
+      return res.status(404).json({ message: "Position not found!" });
+
+    // DELETE POSITION IN DATABASE
+    await prisma.position.delete({
+      where: { id: id },
+    });
+
+    return res.status(200).json({ message: "Deleted position successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
 
 // CHANGE STATUS POSITION
 export const changeStatusPosition = async (req, res, nex) => {};
