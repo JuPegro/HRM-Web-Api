@@ -159,4 +159,28 @@ export const deleteDepartment = async (req, res, nex) => {
 };
 
 // CHANGE STATUS DEPARTMENT
-export const changeStatusDepartment = async (req, res, nex) => {};
+export const changeStatusDepartment = async (req, res, nex) => {
+  try {
+    const { id } = req.params;
+
+    // CHECK PROVIDED ID
+    if (!id) return res.status(400).json({ message: "Id not provided" });
+
+    // GET DATA DEPARTMENT
+    const department = await prisma.department.findUnique({ where: { id: id } });
+
+    // CHANGE STATUS WITH TERNARY
+    const change = await prisma.department.update({
+      where: { id: id },
+      data: {
+        status: department.status === "ACTIVE" ? "INACTIVE" : "ACTIVE",
+      },
+    });
+
+    return res
+      .status(200)
+      .json({ message: `Status change to ${change.status}` });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
