@@ -80,6 +80,37 @@ const swaggerDefinition = {
           }
         }
       },
+      Department: {
+        type: "object",
+        properties: {
+          id: {
+            type: "string",
+            example: "b2223ba1-1b75-452e-aa5c-f45f67b79c27"
+          },
+          name: {
+            type: "string",
+            example: "Information technology"
+          },
+          code: {
+            type: "string",
+            example: "TI00034"
+          },
+          status: {
+            type: "string",
+            example: "ACTIVE"
+          },
+          createdAt: {
+            type: "string",
+            format: "date-time",
+            example: "2024-07-05T00:42:17.715Z"
+          },
+          updatedAt: {
+            type: "string",
+            format: "date-time",
+            example: "2024-07-05T00:42:17.715Z"
+          }
+        }
+      },
       SignInResponse: {
         type: "object",
         properties: {

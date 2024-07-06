@@ -52,7 +52,7 @@ router.post("/user",[ jwtCtrl.verifyToken, jwtCtrl.isModerator ] ,userCtrl.creat
  * @swagger
  * /api/user:
  *   get:
- *     summary: Get all users
+ *     summary: Get user by id
  *     tags:
  *       - User
  *     security:
