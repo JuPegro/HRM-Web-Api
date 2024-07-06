@@ -44,7 +44,18 @@ export const createDepartment = async (req, res, nex) => {
 };
 
 // GET ALL DEPARTMENT
-export const getDepartments = async (req, res, nex) => {};
+export const getDepartments = async (req, res, nex) => {
+  try {
+    const departments = await prisma.department.findMany();
+
+    if (departments.length === 0)
+      return res.status(404).json({ message: "Departments not found!" });
+
+    return res.status(200).json({ departments: departments});
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
 
 // GET A ONE DEPARTMENT
 export const getDepartmentById = async (req, res, nex) => {};
