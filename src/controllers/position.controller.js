@@ -49,7 +49,26 @@ export const getPositions = async (req, res, nex) => {
 };
 
 // GET A ONE POSITION
-export const getPositionById = async (req, res, nex) => {};
+export const getPositionById = async (req, res, nex) => {
+  try {
+    const { id } = req.params;
+
+    // CHECK PROVIDED ID
+    if (!id) return res.status(400).json({ message: "Id not provided" });
+
+    const position = await prisma.position.findUnique({
+      where: { id: id },
+    });
+
+    // CHECK USER FOUND
+    if (!position)
+      return res.status(404).json({ message: "Position not found!" });
+
+    return res.status(200).json({ position: position });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
 
 // UPDATE A POSITION
 export const updatePosition = async (req, res, nex) => {};
