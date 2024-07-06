@@ -1,7 +1,7 @@
 import Joi from "joi";
 
 // DEFINE THE VALIDATION SCHEME
-export const departmentValidation = Joi.object({
+export const positionValidation = Joi.object({
   name: Joi.string().min(3).max(50).required().messages({
     "string.base": "Name must be a string",
     "string.empty": "Name is required",
@@ -16,11 +16,9 @@ export const departmentValidation = Joi.object({
     "string.max": "Description must be at most 20 characters long",
     "any.required": "Description is required",
   }),
-  departmentId: Joi.string()
-    .required()
-    .messages({
-      "string.base": "DepartmentId must be a string",
-      "string.empty": "DepartmentId is required",
-      "any.required": "DepartmentId is required",
-    }),
+  departmentId: Joi.string().required().messages({
+    "string.base": "DepartmentId must be a string",
+    "string.empty": "DepartmentId is required",
+    "any.required": "DepartmentId is required",
+  }),
 });
