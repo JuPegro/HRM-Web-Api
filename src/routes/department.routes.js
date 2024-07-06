@@ -47,7 +47,7 @@ import * as departmentCtrl from "../controllers/department.controller.js";
  * 
  */
 
-router.post('/department', [jwtCtrl.verifyToken], departmentCtrl.createDepartment) // CREATE NEW DEPARTMENT
+router.post('/department', [jwtCtrl.verifyToken, jwtCtrl.isModerator], departmentCtrl.createDepartment) // CREATE NEW DEPARTMENT
 
 /**
  * @swagger
