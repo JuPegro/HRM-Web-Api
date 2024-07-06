@@ -96,10 +96,10 @@ export const updateDepartment = async (req, res, nex) => {
 
     /* THIS IS LOOKING FOR A DOCTOR WHO HAS THE SAME VALUE 
           INTRODUCED IN THE BODY FOR THE FIELDS */
-    const uniqueFields = await prisma.department.findFirst({
+    const uniqueFields = await prisma.position.findFirst({
       where: {
-        NOT: { id: id }, // EXCLUDE CURRENT DEPARTMENT FROM SEARCH
-        OR: [{ name: value.name }, { code: value.code }],
+        NOT: { id: id }, // EXCLUDE CURRENT POSITION FROM SEARCH
+        AND: [{ name: value.name }],
       },
     });
 
@@ -167,7 +167,9 @@ export const changeStatusDepartment = async (req, res, nex) => {
     if (!id) return res.status(400).json({ message: "Id not provided" });
 
     // GET DATA DEPARTMENT
-    const department = await prisma.department.findUnique({ where: { id: id } });
+    const department = await prisma.department.findUnique({
+      where: { id: id },
+    });
 
     // CHANGE STATUS WITH TERNARY
     const change = await prisma.department.update({

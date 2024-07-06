@@ -14,7 +14,7 @@ router.get("/position", jwtCtrl.verifyToken, positionCtrl.getPositions) // GET A
 
 router.get("/position/:id", jwtCtrl.verifyToken, positionCtrl.getPositionById) // GET A ONE POSITION
 
-router.put('/position/:id', [jwtCtrl.verifyToken, jwtCtrl.isModerator], positionCtrl.updatePosition) // UPDATE A POSITION
+router.put('/position/:id', [jwtCtrl.verifyToken], positionCtrl.updatePosition) // UPDATE A POSITION
 
 router.put('/position/:id/status', [jwtCtrl.verifyToken, jwtCtrl.isAdmin], positionCtrl.changeStatusPosition) // CHANGE STATUS
 

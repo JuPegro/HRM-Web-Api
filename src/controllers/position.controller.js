@@ -71,7 +71,47 @@ export const getPositionById = async (req, res, nex) => {
 };
 
 // UPDATE A POSITION
-export const updatePosition = async (req, res, nex) => {};
+export const updatePosition = async (req, res, nex) => {
+  try {
+    // GET POSITION ID
+    const { id } = req.params;
+
+    // CHECK ID PROVIDED
+    if (!id) return res.status(400).json({ message: "Id not provided" });
+
+    // VALIDATE BODY WITH JOI
+    const { error, value } = positionValidation.validate(req.body);
+
+    // VALIDATE EMPTY FIELDS
+    if (error) return res.status(400).json({ error: error.details[0].message });
+
+    /* THIS IS LOOKING FOR A DOCTOR WHO HAS THE SAME VALUE 
+        INTRODUCED IN THE BODY FOR THE FIELDS */
+    const uniqueFields = await prisma.position.findFirst({
+      where: {
+        NOT: { id: id }, // EXCLUDE CURRENT POSITION FROM SEARCH
+        name: value.name,
+      },
+    });
+
+    // IF UNIQUE FIELDS IN BODY
+    if (uniqueFields) return res.status(400).json({ message: "Position name already in use!" });
+
+    // UPDATE POSITION IN DATABASE
+    const position = await prisma.position.update({
+      where: {
+        id: id,
+      },
+      data: value,
+    });
+
+    return res
+      .status(202)
+      .json({ message: "Updated position sucessfully", position });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
 
 // DELETE A POSITION
 export const deletePosition = async (req, res, nex) => {
@@ -101,4 +141,28 @@ export const deletePosition = async (req, res, nex) => {
 };
 
 // CHANGE STATUS POSITION
-export const changeStatusPosition = async (req, res, nex) => {};
+export const changeStatusPosition = async (req, res, nex) => {
+  try {
+    const { id } = req.params;
+
+    // CHECK PROVIDED ID
+    if (!id) return res.status(400).json({ message: "Id not provided" });
+
+    // GET DATA POSITION
+    const position = await prisma.position.findUnique({ where: { id: id } });
+
+    // CHANGE STATUS WITH TERNARY
+    const change = await prisma.position.update({
+      where: { id: id },
+      data: {
+        status: position.status === "ACTIVE" ? "INACTIVE" : "ACTIVE",
+      },
+    });
+
+    return res
+      .status(200)
+      .json({ message: `Status change to ${change.status}` });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
