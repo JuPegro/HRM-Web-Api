@@ -6,7 +6,7 @@ const router = Router();
 import * as jwtCtrl from "../middlewares/authJwt.js";
 
 // IMPORT DEPARTMENT CONTROLLER
-import * as DepartmentCtrl from "../controllers/department.controller.js";
+import * as departmentCtrl from "../controllers/department.controller.js";
 
 /**
  * @swagger
@@ -47,7 +47,7 @@ import * as DepartmentCtrl from "../controllers/department.controller.js";
  * 
  */
 
-router.post('/department', [jwtCtrl.verifyToken, jwtCtrl.isModerator], DepartmentCtrl.createDepartment) // CREATE NEW DEPARTMENT
+router.post('/department', [jwtCtrl.verifyToken, jwtCtrl.isModerator], departmentCtrl.createDepartment) // CREATE NEW DEPARTMENT
 
 /**
  * @swagger
@@ -72,7 +72,7 @@ router.post('/department', [jwtCtrl.verifyToken, jwtCtrl.isModerator], Departmen
  * 
  */
 
-router.get("/department", jwtCtrl.verifyToken, DepartmentCtrl.getDepartments) // GET ALL DEPARTMENT
+router.get("/department", jwtCtrl.verifyToken, departmentCtrl.getDepartments) // GET ALL DEPARTMENT
 
 /**
  * @swagger
@@ -104,7 +104,7 @@ router.get("/department", jwtCtrl.verifyToken, DepartmentCtrl.getDepartments) //
  * 
  */
 
-router.get("/department/:id", jwtCtrl.verifyToken, DepartmentCtrl.getDepartmentById) // GET A ONE DEPARTMENT
+router.get("/department/:id", jwtCtrl.verifyToken, departmentCtrl.getDepartmentById) // GET A ONE DEPARTMENT
 
 /**
  * @swagger
@@ -152,7 +152,7 @@ router.get("/department/:id", jwtCtrl.verifyToken, DepartmentCtrl.getDepartmentB
  * 
  */
 
-router.put('/department/:id', [jwtCtrl.verifyToken, jwtCtrl.isModerator], DepartmentCtrl.updateDepartment) // UPDATE A DEPARTMENT
+router.put('/department/:id', [jwtCtrl.verifyToken, jwtCtrl.isModerator], departmentCtrl.updateDepartment) // UPDATE A DEPARTMENT
 
 /**
  * @swagger
@@ -180,7 +180,7 @@ router.put('/department/:id', [jwtCtrl.verifyToken, jwtCtrl.isModerator], Depart
  * 
  */
 
-router.put('/department/:id/status', [jwtCtrl.verifyToken, jwtCtrl.isAdmin], DepartmentCtrl.changeStatusDepartment) // CHANGE STATUS
+router.put('/department/:id/status', [jwtCtrl.verifyToken, jwtCtrl.isAdmin], departmentCtrl.changeStatusDepartment) // CHANGE STATUS
 
 /**
  * @swagger
@@ -208,6 +208,6 @@ router.put('/department/:id/status', [jwtCtrl.verifyToken, jwtCtrl.isAdmin], Dep
  * 
  */
 
-router.delete('/department/:id', [jwtCtrl.verifyToken, jwtCtrl.isAdmin], DepartmentCtrl.deleteDepartment) // DELETE A DEPARTMENT
+router.delete('/department/:id', [jwtCtrl.verifyToken, jwtCtrl.isAdmin], departmentCtrl.deleteDepartment) // DELETE A DEPARTMENT
 
 export default router;
