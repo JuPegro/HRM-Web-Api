@@ -40,7 +40,26 @@ export const getEmployees = async (req, res, nex) => {
 };
 
 // GET A ONE EMPLOYEE
-export const getEmployeeById = async (req, res, nex) => {};
+export const getEmployeeById = async (req, res, nex) => {
+  try {
+    const { id } = req.params;
+
+    // CHECK PROVIDED ID
+    if (!id) return res.status(400).json({ message: "Id not provided" });
+
+    const employee = await prisma.employee.findUnique({
+      where: { id: id },
+    });
+
+    // CHECK USER FOUND
+    if (!employee)
+      return res.status(404).json({ message: "Employee not found!" });
+
+    return res.status(200).json({ employee: employee });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
 
 // UPDATE A EMPLOYEE
 export const updateEmployee = async (req, res, nex) => {};
