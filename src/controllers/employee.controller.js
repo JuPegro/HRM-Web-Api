@@ -93,7 +93,31 @@ export const updateEmployee = async (req, res, nex) => {
 };
 
 // DELETE A EMPLOYEE
-export const deleteEmployee = async (req, res, nex) => {};
+export const deleteEmployee = async (req, res, nex) => {
+  try {
+    const { id } = req.params;
+
+    // CHECK ID PROVIDED
+    if (!id) return res.status(400).json({ message: "Id not provided!" });
+
+    // FIND EMPLOYEE
+    const employee = await prisma.employee.findUnique({
+      where: { id: id },
+    });
+
+    if (!employee)
+      return res.status(404).json({ message: "Employee not found!" });
+
+    // DELETE EMPLOYEE IN DATABASE
+    await prisma.employee.delete({
+      where: { id: id },
+    });
+
+    return res.status(200).json({ message: "Deleted employee successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
 
 // CHANGE STATUS EMPLOYEE
 export const changeStatusEmployee = async (req, res, nex) => {
