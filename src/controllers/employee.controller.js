@@ -62,7 +62,35 @@ export const getEmployeeById = async (req, res, nex) => {
 };
 
 // UPDATE A EMPLOYEE
-export const updateEmployee = async (req, res, nex) => {};
+export const updateEmployee = async (req, res, nex) => {
+  try {
+    // GET EMPLOYEE ID
+    const { id } = req.params;
+
+    // CHECK ID PROVIDED
+    if (!id) return res.status(400).json({ message: "Id not provided" });
+
+    // VALIDATE BODY WITH JOI
+    const { error, value } = employeeValidation.validate(req.body);
+
+    // VALIDATE EMPTY FIELDS
+    if (error) return res.status(400).json({ error: error.details[0].message });
+
+    // UPDATE EMPLOYEE IN DATABASE
+    const employee = await prisma.employee.update({
+      where: {
+        id: id,
+      },
+      data: value,
+    });
+
+    return res
+      .status(202)
+      .json({ message: "Updated employee sucessfully", employee });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
 
 // DELETE A EMPLOYEE
 export const deleteEmployee = async (req, res, nex) => {};
