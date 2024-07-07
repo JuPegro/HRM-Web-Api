@@ -26,7 +26,18 @@ export const createEmployee = async (req, res, nex) => {
 };
 
 // GET ALL EMPLOYEE
-export const getEmployees = async (req, res, nex) => {};
+export const getEmployees = async (req, res, nex) => {
+  try {
+    const employees = await prisma.employee.findMany();
+
+    if (employees.length === 0)
+      return res.status(404).json({ message: "Employees not found!" });
+
+    return res.status(200).json({ employees: employees });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
 
 // GET A ONE EMPLOYEE
 export const getEmployeeById = async (req, res, nex) => {};
