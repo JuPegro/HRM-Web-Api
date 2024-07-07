@@ -96,4 +96,30 @@ export const updateEmployee = async (req, res, nex) => {
 export const deleteEmployee = async (req, res, nex) => {};
 
 // CHANGE STATUS EMPLOYEE
-export const changeStatusEmployee = async (req, res, nex) => {};
+export const changeStatusEmployee = async (req, res, nex) => {
+  try {
+    const { id } = req.params;
+
+    // CHECK PROVIDED ID
+    if (!id) return res.status(400).json({ message: "Id not provided" });
+
+    // GET DATA EMPLOYEE
+    const employee = await prisma.employee.findUnique({
+      where: { id: id },
+    });
+
+    // CHANGE STATUS WITH TERNARY
+    const change = await prisma.employee.update({
+      where: { id: id },
+      data: {
+        status: employee.status === "ACTIVE" ? "INACTIVE" : "ACTIVE",
+      },
+    });
+
+    return res
+      .status(200)
+      .json({ message: `Status change to ${change.status}` });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
