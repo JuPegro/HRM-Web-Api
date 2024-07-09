@@ -46,7 +46,7 @@ import * as jwtCtrl from "../middlewares/authJwt.js";
  * 
  */
 
-router.post("/user",[ jwtCtrl.verifyToken, jwtCtrl.isModerator ] ,userCtrl.createUser); // CREATE NEW USER
+router.post("/user",[ jwtCtrl.verifyToken, jwtCtrl.isAdmin ] ,userCtrl.createUser); // CREATE NEW USER
 
 /**
  * @swagger

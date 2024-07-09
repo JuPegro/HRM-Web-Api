@@ -51,7 +51,7 @@ import * as positionCtrl from "../controllers/position.controller.js";
  * 
  */
 
-router.post('/position', [jwtCtrl.verifyToken, jwtCtrl.isAdmin], positionCtrl.createPosition) // CREATE NEW POSITION
+router.post('/position', [jwtCtrl.verifyToken, jwtCtrl.isModerator], positionCtrl.createPosition) // CREATE NEW POSITION
 
 /**
  * @swagger
