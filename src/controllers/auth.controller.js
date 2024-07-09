@@ -12,7 +12,7 @@ export const signin = async (req, res, next) => {
     if (!email || !password)
       return res.status(400).json({ message: "Fields not provided" });
 
-    // FOUND USER IN DB
+    // FIND USER IN DB
     const userFound = await prisma.user.findUnique({ where: { email } });
 
     if (!userFound) return res.status(404).json({ message: "User not found" });

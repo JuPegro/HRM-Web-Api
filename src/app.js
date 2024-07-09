@@ -18,6 +18,7 @@ import userRoutes from "./routes/user.routes.js";
 import positionRoutes from "./routes/position.routes.js";
 import departmentRoutes from "./routes/department.routes.js";
 import employeeRoutes from "./routes/employee.routes.js";
+import leaveRoutes from "./routes/leave.routes.js";
 
 // CREATE SERVER
 const app = express();
@@ -46,6 +47,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api", positionRoutes);
 app.use("/api", departmentRoutes);
 app.use("/api", employeeRoutes);
+app.use("/api", leaveRoutes);
 
 // SERVER SWAGGER DOCUMENTACION 
 app.use('/api-docs/v1', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
