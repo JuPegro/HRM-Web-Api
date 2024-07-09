@@ -161,8 +161,7 @@ const swaggerDefinition = {
           },
           lastname: {
             type: "string",
-            example:
-              "Doe",
+            example: "Doe",
           },
           positionId: {
             type: "string",
@@ -170,12 +169,46 @@ const swaggerDefinition = {
           },
           salary: {
             type: "string",
-            example:
-              "108002.23",
+            example: "108002.23",
           },
           status: {
             type: "string",
             example: "ACTIVE",
+          },
+          createdAt: {
+            type: "string",
+            format: "date-time",
+            example: "2024-07-05T00:42:17.715Z",
+          },
+          updatedAt: {
+            type: "string",
+            format: "date-time",
+            example: "2024-07-05T00:42:17.715Z",
+          },
+        },
+      },
+      Leave: {
+        type: "object",
+        properties: {
+          id: {
+            type: "string",
+            example: "b2223ba1-1b75-452e-aa5c-f45f67b79c27",
+          },
+          employeeId: {
+            type: "string",
+            example: "e97bfbe8-c334-495a-8edf-91d5cf47d5fe",
+          },
+          startDate: {
+            type: "string",
+            example: "2024-07-10",
+          },
+          endDate: {
+            type: "string",
+            example: "2024-07-11",
+          },
+          reason: {
+            type: "string",
+            example: "vacation",
           },
           createdAt: {
             type: "string",
