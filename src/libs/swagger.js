@@ -210,6 +210,10 @@ const swaggerDefinition = {
             type: "string",
             example: "vacation",
           },
+          status: {
+            type: "string",
+            example: "ACTIVE",
+          },
           createdAt: {
             type: "string",
             format: "date-time",
@@ -244,6 +248,37 @@ const swaggerDefinition = {
           reason: {
             type: "string",
             example: "vacation",
+          },
+          createdAt: {
+            type: "string",
+            format: "date-time",
+            example: "2024-07-05T00:42:17.715Z",
+          },
+          updatedAt: {
+            type: "string",
+            format: "date-time",
+            example: "2024-07-05T00:42:17.715Z",
+          },
+        },
+      },
+      Payroll: {
+        type: "object",
+        properties: {
+          id: {
+            type: "string",
+            example: "b2223ba1-1b75-452e-aa5c-f45f67b79c27",
+          },
+          employeeId: {
+            type: "string",
+            example: "e97bfbe8-c334-495a-8edf-91d5cf47d5fe",
+          },
+          date: {
+            type: "string",
+            example: "2024-07-10",
+          },
+          amount: {
+            type: "string",
+            example: "67890.00",
           },
           createdAt: {
             type: "string",

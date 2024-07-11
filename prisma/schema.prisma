@@ -77,7 +77,7 @@ model Department {
 // TABLE PAYROLL
 model Payroll {
   id         String    @id @default(uuid())
-  amount     Float
+  amount     String
   date       String
   status     Status    @default(ACTIVE)
   employeeId String
