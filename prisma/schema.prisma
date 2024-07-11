@@ -111,6 +111,7 @@ model Reviewer {
   id           String    @id @default(uuid())
   employeeId   String    @unique
   departmentId String    @unique
+  status       Status    @default(ACTIVE)
   createdAt    DateTime  @default(now())
   updatedAt    DateTime? @updatedAt
 
