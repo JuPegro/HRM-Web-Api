@@ -7,7 +7,7 @@ import cookieParser from "cookie-parser";
 
 // IMPORT SWAGGER CONFIG
 import swaggerUI from "swagger-ui-express";
-import swaggerSpec from './libs/swagger.js'
+import swaggerSpec from "./libs/swagger.js";
 
 // IMPORT CREATE INITIAL USERS
 import "./libs/initialSetup.js";
@@ -21,6 +21,7 @@ import employeeRoutes from "./routes/employee.routes.js";
 import leaveRoutes from "./routes/leave.routes.js";
 import licenseRoutes from "./routes/license.routes.js";
 import payrollRoutes from "./routes/payroll.routes.js";
+import reviewerRoutes from "./routes/reviewer.routes.js";
 
 // CREATE SERVER
 const app = express();
@@ -52,9 +53,10 @@ app.use("/api", employeeRoutes);
 app.use("/api", leaveRoutes);
 app.use("/api", licenseRoutes);
 app.use("/api", payrollRoutes);
+app.use("/api", reviewerRoutes);
 
-// SERVER SWAGGER DOCUMENTACION 
-app.use('/api-docs/v1', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
+// SERVER SWAGGER DOCUMENTACION
+app.use("/api-docs/v1", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 
 app.get("/", (req, res) => {
   res.send("WORKING...");

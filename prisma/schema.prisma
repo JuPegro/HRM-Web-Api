@@ -40,6 +40,7 @@ model Employee {
   // NAVIGATION PROPERTYS
   payroll     Payroll[]
   performance Performance[]
+  reviewer    Reviewer[]
   leave       Leave[]
   license     License[]
   position    Position      @relation(fields: [positionId], references: [id])
@@ -47,13 +48,13 @@ model Employee {
 
 // TABLE POSITION
 model Position {
-  id           String @id @default(uuid())
-  name         String @unique
+  id           String    @id @default(uuid())
+  name         String    @unique
   description  String
   departmentId String
-  status    Status     @default(ACTIVE)
-  createdAt DateTime   @default(now())
-  updatedAt DateTime?  @updatedAt
+  status       Status    @default(ACTIVE)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime? @updatedAt
 
   // NAVIGATION PROPERTYS
   department Department @relation(fields: [departmentId], references: [id])
@@ -62,16 +63,16 @@ model Position {
 
 // TABLE DEPARTMENT
 model Department {
-  id        String     @id @default(uuid())
-  name      String     @unique
-  code      String     @unique
-  status    Status     @default(ACTIVE)
-  createdAt DateTime   @default(now())
-  updatedAt DateTime?  @updatedAt
-  
+  id        String    @id @default(uuid())
+  name      String    @unique
+  code      String    @unique
+  status    Status    @default(ACTIVE)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+
   // NAVIGATION PROPERTYS
-  position  Position[]
-  reviewer  Reviewer?
+  position Position[]
+  reviewer Reviewer?
 }
 
 // TABLE PAYROLL
@@ -96,26 +97,27 @@ model Performance {
   date       String
   status     Status    @default(ACTIVE)
   employeeId String
+  reviewerId String
   createdAt  DateTime  @default(now())
   updatedAt  DateTime? @updatedAt
 
   // NAVIGATION PROPERTYS
-  reviewer Reviewer[]
-  employee Employee   @relation(fields: [employeeId], references: [id])
+  employee Employee @relation(fields: [employeeId], references: [id])
+  reviewer Reviewer @relation(fields: [reviewerId], references: [id])
 }
 
 // TABLE REVIEWER
 model Reviewer {
-  id            String    @id @default(uuid())
-  name          String
-  performanceId String
-  departmentId  String    @unique
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime? @updatedAt
+  id           String    @id @default(uuid())
+  employeeId   String    @unique
+  departmentId String    @unique
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime? @updatedAt
 
   // NAVIGATION PROPERTYS
-  department  Department  @relation(fields: [departmentId], references: [id])
-  performance Performance @relation(fields: [performanceId], references: [id])
+  department  Department    @relation(fields: [departmentId], references: [id])
+  employee    Employee      @relation(fields: [employeeId], references: [id])
+  performance Performance[]
 }
 
 // TABLE LEAVE
