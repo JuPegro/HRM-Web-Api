@@ -55,7 +55,7 @@ import * as employeeCtrl from "../controllers/employee.controller.js";
  * 
  */
 
-router.post('/employee', [jwtCtrl.verifyToken, jwtCtrl.isModerator], employeeCtrl.createEmployee) // CREATE NEW EMPLOYEE
+router.post('/employee', [jwtCtrl.verifyToken, jwtCtrl.isAdmin], employeeCtrl.createEmployee) // CREATE NEW EMPLOYEE
 
 /**
  * @swagger
