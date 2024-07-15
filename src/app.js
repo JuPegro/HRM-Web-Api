@@ -22,6 +22,7 @@ import leaveRoutes from "./routes/leave.routes.js";
 import licenseRoutes from "./routes/license.routes.js";
 import payrollRoutes from "./routes/payroll.routes.js";
 import reviewerRoutes from "./routes/reviewer.routes.js";
+import performanceRoutes from "./routes/performance.routes.js";
 
 // CREATE SERVER
 const app = express();
@@ -54,6 +55,7 @@ app.use("/api", leaveRoutes);
 app.use("/api", licenseRoutes);
 app.use("/api", payrollRoutes);
 app.use("/api", reviewerRoutes);
+app.use("/api", performanceRoutes);
 
 // SERVER SWAGGER DOCUMENTACION
 app.use("/api-docs/v1", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
