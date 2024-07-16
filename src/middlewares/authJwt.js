@@ -8,7 +8,7 @@ export const verifyToken = async (req, res, next) => {
   // GET TOKEN FROM HEADERS
   let token = req.headers["authorization"];
 
-  if (!token) return res.status(403).json({ message: "No token provided" });
+  if (!token) return res.status(403).json({ message: "Unauthorized: No token provided" });
 
   try {
     // VERIFY IF IT'S A VALID TOKEN

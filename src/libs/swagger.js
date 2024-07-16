@@ -331,6 +331,42 @@ const swaggerDefinition = {
           },
         },
       },
+      Forbidden: {
+        type: "object",
+        properties: {
+          message: {
+            type: "string",
+            example: "Unauthorized: No token provided!",
+          },
+        },
+      },
+      InternalServer: {
+        type: "object",
+        properties: {
+          Error: {
+            type: "string",
+            example: "Internal server error",
+          },
+        },
+      },
+      BadRequest: {
+        type: "object",
+        properties: {
+          Message: {
+            type: "string",
+            example: "Bad request!",
+          },
+        },
+      },
+      NotFound: {
+        type: "object",
+        properties: {
+          Message: {
+            type: "string",
+            example: "Item not found!",
+          },
+        },
+      },
       SignInResponse: {
         type: "object",
         properties: {

@@ -88,6 +88,17 @@ export const updateDepartment = async (req, res, nex) => {
     // CHECK ID PROVIDED
     if (!id) return res.status(400).json({ message: "Id not provided" });
 
+    // FIND DEPARTMENT
+    const departmentExists = await prisma.department.findFirst({
+      where: {
+        id: id,
+      },
+    });
+
+    // IF NOT FOUND
+    if (!departmentExists)
+      return res.status(404).json({ message: "Department not found" });
+
     // VALIDATE BODY WITH JOI
     const { error, value } = departmentValidation.validate(req.body);
 
@@ -96,10 +107,10 @@ export const updateDepartment = async (req, res, nex) => {
 
     /* THIS IS LOOKING FOR A DOCTOR WHO HAS THE SAME VALUE 
           INTRODUCED IN THE BODY FOR THE FIELDS */
-    const uniqueFields = await prisma.position.findFirst({
+    const uniqueFields = await prisma.department.findFirst({
       where: {
-        NOT: { id: id }, // EXCLUDE CURRENT POSITION FROM SEARCH
-        AND: [{ name: value.name }],
+        NOT: { id: id }, // EXCLUDE CURRENT DEPARTMENT FROM SEARCH
+        OR: [{ name: value.name }, { code: value.code }],
       },
     });
 
@@ -124,7 +135,7 @@ export const updateDepartment = async (req, res, nex) => {
     });
 
     return res
-      .status(202)
+      .status(200)
       .json({ message: "Updated department sucessfully", department });
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -170,6 +181,10 @@ export const changeStatusDepartment = async (req, res, nex) => {
     const department = await prisma.department.findUnique({
       where: { id: id },
     });
+
+    // IF NOT FOUND
+    if (!department)
+      return res.status(404).json({ message: "Department not found" });
 
     // CHANGE STATUS WITH TERNARY
     const change = await prisma.department.update({

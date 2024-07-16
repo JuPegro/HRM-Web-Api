@@ -1,4 +1,4 @@
-import {Router} from 'express'
+import { Router } from "express";
 
 const router = Router();
 
@@ -32,22 +32,37 @@ import * as departmentCtrl from "../controllers/department.controller.js";
  *                 example: Information technology
  *               code:
  *                 type: string
- *                 example: TI00034
+ *                 example: TI000034
  *     responses:
- *       200:
+ *       201:
  *         description: Successfully created department
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Department'
  *       400:
- *         description: Department or Code already in use
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BadRequest'
+ *       403:
+ *         description: No token provided
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Forbidden'
  *       500:
- *         description: Internal server error 
- * 
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InternalServer'
+ *
+ *
  */
 
-router.post('/department', [jwtCtrl.verifyToken, jwtCtrl.isAdmin], departmentCtrl.createDepartment) // CREATE NEW DEPARTMENT
+router.post("/department",jwtCtrl.verifyToken,departmentCtrl.createDepartment); // CREATE NEW DEPARTMENT
 
 /**
  * @swagger
@@ -60,19 +75,49 @@ router.post('/department', [jwtCtrl.verifyToken, jwtCtrl.isAdmin], departmentCtr
  *       - Bearer: []
  *     responses:
  *       200:
- *         description: Successfully all departments
+ *         description: Successfully get all departments
  *         content:
  *           application/json:
  *             schema:
+ *               type: array
+ *               items:
  *               $ref: '#/components/schemas/Department'
+ *             example:
+ *               departments:
+ *                  - id: "90acb06b-3dea-4483-b106-e85f30a2b986"
+ *                    name: "RRHH"
+ *                    code: "RH000001"
+ *                    status: "INACTIVE"
+ *                    createdAt: "2024-07-05T00:42:17.715Z"
+ *                    updatedAt: "2024-07-05T00:42:17.715Z"
+ *                  - id: "b2223ba1-1b75-452e-aa5c-f45f67b79c27"
+ *                    name: "Information Technology"
+ *                    code: "IT00034"
+ *                    status: "ACTIVE"
+ *                    createdAt: "2024-07-05T00:42:17.715Z"
+ *                    updatedAt: "2024-07-05T00:42:17.715Z"
  *       400:
- *         description: Departments not found!
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BadRequest'
+ *       403:
+ *         description: No token provided
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Forbidden'
  *       500:
- *         description: Internal server error 
- * 
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InternalServer'
+ *
  */
 
-router.get("/department", jwtCtrl.verifyToken, departmentCtrl.getDepartments) // GET ALL DEPARTMENT
+router.get("/department", jwtCtrl.verifyToken, departmentCtrl.getDepartments); // GET ALL DEPARTMENT
 
 /**
  * @swagger
@@ -87,24 +132,48 @@ router.get("/department", jwtCtrl.verifyToken, departmentCtrl.getDepartments) //
  *         required: true
  *         schema:
  *           type: string
- *         description: ID of the department to get
+ *         description: Id of the department to get
  *     security:
  *       - Bearer: []
  *     responses:
  *       200:
- *         description: Successfully department found
+ *         description: Successfully get department
  *         content:
  *           application/json:
  *             schema:
+ *               type: array
+ *               items:
  *               $ref: '#/components/schemas/Department'
- *       400:
- *         description: Department not found!
+*             example:
+ *               department:
+ *                  - id: "90acb06b-3dea-4483-b106-e85f30a2b986"
+ *                    name: "RRHH"
+ *                    code: "RH000001"
+ *                    status: "INACTIVE"
+ *                    createdAt: "2024-07-05T00:42:17.715Z"
+ *                    updatedAt: "2024-07-05T00:42:17.715Z"
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BadRequest'
+ *       403:
+ *         description: No token provided
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Forbidden'
  *       500:
- *         description: Internal server error 
- * 
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InternalServer'
+ *
  */
 
-router.get("/department/:id", jwtCtrl.verifyToken, departmentCtrl.getDepartmentById) // GET A ONE DEPARTMENT
+router.get("/department/:id", jwtCtrl.verifyToken, departmentCtrl.getDepartmentById); // GET A ONE DEPARTMENT
 
 /**
  * @swagger
@@ -137,22 +206,44 @@ router.get("/department/:id", jwtCtrl.verifyToken, departmentCtrl.getDepartmentB
  *                 example: Information technology
  *               code:
  *                 type: string
- *                 example: TI00034
+ *                 example: TI000034
  *     responses:
  *       200:
- *         description: Successfully update
+ *         description: Successfully update department
  *         content:
  *           application/json:
  *             schema:
+ *               type: array
+ *               items:
  *               $ref: '#/components/schemas/Department'
  *       400:
- *         description: Department or code already in use!
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BadRequest'
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/NotFound'
+ *       403:
+ *         description: No token provided
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Forbidden'
  *       500:
- *         description: Internal server error 
- * 
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InternalServer'
+ *
  */
 
-router.put('/department/:id', [jwtCtrl.verifyToken, jwtCtrl.isModerator], departmentCtrl.updateDepartment) // UPDATE A DEPARTMENT
+router.put("/department/:id", jwtCtrl.verifyToken, departmentCtrl.updateDepartment); // UPDATE A DEPARTMENT
 
 /**
  * @swagger
@@ -172,15 +263,37 @@ router.put('/department/:id', [jwtCtrl.verifyToken, jwtCtrl.isModerator], depart
  *       - Bearer: []
  *     responses:
  *       200:
- *         description: Successfully status changed
- *       400:
- *         description: Department not found!
+ *         description: Successfully change status department
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                  message:
+ *                    type: string
+ *                    example: Status change to 'ACTIVE'
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/NotFound'
+ *       403:
+ *         description: No token provided
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Forbidden'
  *       500:
- *         description: Internal server error 
- * 
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InternalServer'
+ *
  */
 
-router.put('/department/:id/status', [jwtCtrl.verifyToken, jwtCtrl.isAdmin], departmentCtrl.changeStatusDepartment) // CHANGE STATUS
+router.put("/department/:id/status", [jwtCtrl.verifyToken, jwtCtrl.isAdmin], departmentCtrl.changeStatusDepartment); // CHANGE STATUS
 
 /**
  * @swagger
@@ -201,13 +314,35 @@ router.put('/department/:id/status', [jwtCtrl.verifyToken, jwtCtrl.isAdmin], dep
  *     responses:
  *       200:
  *         description: Successfully deleted department
- *       400:
- *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                  message:
+ *                    type: string
+ *                    example: Successfully deleted department
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/NotFound'
+ *       403:
+ *         description: No token provided
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Forbidden'
  *       500:
- *         description: Internal server error 
- * 
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InternalServer'
+ *
  */
 
-router.delete('/department/:id', [jwtCtrl.verifyToken, jwtCtrl.isAdmin], departmentCtrl.deleteDepartment) // DELETE A DEPARTMENT
+router.delete("/department/:id", [jwtCtrl.verifyToken, jwtCtrl.isAdmin], departmentCtrl.deleteDepartment); // DELETE A DEPARTMENT
 
 export default router;
