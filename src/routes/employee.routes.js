@@ -48,6 +48,12 @@ import * as employeeCtrl from "../controllers/employee.controller.js";
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Employee'
+ *       400:
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BadRequest'
  *       403:
  *         description: No token provided
  *         content:

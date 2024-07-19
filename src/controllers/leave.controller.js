@@ -71,11 +71,27 @@ export const updateLeave = async (req, res, nex) => {
     // CHECK ID PROVIDED
     if (!id) return res.status(400).json({ message: "Id not provided" });
 
+    // FOUND LEAVE EXISTS
+    const findLeave = await prisma.leave.findUnique({ where: { id: id } });
+
+    // IF NOT FOUND LEAVE
+    if (!findLeave)
+      return res.status(404).json({ message: "Leave not found!" });
+
     // VALIDATE BODY WITH JOI
     const { error, value } = leaveValidation.validate(req.body);
 
     // VALIDATE EMPTY FIELDS
     if (error) return res.status(400).json({ error: error.details[0].message });
+
+    // VERIFY VALID EMPLOYEEID
+    const findEmployee = await prisma.employee.findUnique({
+      where: { id: value.employeeId },
+    });
+
+    // IF NOT VALID EMPLOYEE ID
+    if (!findEmployee)
+      return res.status(404).json({ message: "This employee is invalid" });
 
     // UPDATE LEAVE IN DATABASE
     const leave = await prisma.leave.update({
@@ -86,7 +102,7 @@ export const updateLeave = async (req, res, nex) => {
     });
 
     return res
-      .status(202)
+      .status(200)
       .json({ message: "Updated leave sucessfully", leave });
   } catch (error) {
     return res.status(500).json({ message: error.message });
