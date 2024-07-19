@@ -108,6 +108,12 @@ router.post("/department",jwtCtrl.verifyToken,departmentCtrl.createDepartment); 
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Forbidden'
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BadRequest'
  *       500:
  *         description: Internal server error
  *         content:
@@ -272,6 +278,12 @@ router.put("/department/:id", jwtCtrl.verifyToken, departmentCtrl.updateDepartme
  *                  message:
  *                    type: string
  *                    example: Status change to 'ACTIVE'
+ *       400:
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BadRequest'
  *       404:
  *         description: Not Found
  *         content:
@@ -322,6 +334,12 @@ router.put("/department/:id/status", [jwtCtrl.verifyToken, jwtCtrl.isAdmin], dep
  *                  message:
  *                    type: string
  *                    example: Successfully deleted department
+ *       400:
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BadRequest'
  *       404:
  *         description: Not Found
  *         content:

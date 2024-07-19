@@ -48,10 +48,24 @@ import * as employeeCtrl from "../controllers/employee.controller.js";
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Employee'
- *       400:
- *         description: Employee or Code already in use
+ *       403:
+ *         description: No token provided
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Forbidden'
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/NotFound'
  *       500:
- *         description: Internal server error 
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InternalServer'
  * 
  */
 
@@ -68,15 +82,55 @@ router.post('/employee', [jwtCtrl.verifyToken, jwtCtrl.isAdmin], employeeCtrl.cr
  *       - Bearer: []
  *     responses:
  *       200:
- *         description: Successfully all employees
+ *         description: Successfully get all Employees
  *         content:
  *           application/json:
  *             schema:
+ *               type: array
+ *               items:
  *               $ref: '#/components/schemas/Employee'
+ *             example:
+ *               employees:
+ *                  - id: 90acb06b-3dea-4483-b106-e85f30a2b986
+ *                    name: John
+ *                    lastname: Doe
+ *                    positionId: e97bfbe8-c334-495a-8edf-91d5cf47d5fe
+ *                    salary: "108002.23"
+ *                    status: ACTIVE
+ *                    createdAt: "2024-07-05T00:42:17.715Z"
+ *                    updatedAt: "2024-07-05T00:42:17.715Z"
+ *                  - id: 90acb06b-3dea-4483-b106-e85f30a2b986
+ *                    name: JuPegro
+ *                    lastname: Developer
+ *                    positionId: e97bfbe8-c334-495a-8edf-91d5cf47d5fe
+ *                    salary: "108002.23"
+ *                    status: INACTIVE
+ *                    createdAt: "2024-07-05T00:42:17.715Z"
+ *                    updatedAt: "2024-07-05T00:42:17.715Z"
  *       400:
- *         description: employees not found!
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BadRequest'
+ *       403:
+ *         description: No token provided
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Forbidden'
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/NotFound'
  *       500:
- *         description: Internal server error 
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InternalServer'
  * 
  */
 
@@ -100,15 +154,41 @@ router.get("/employee", jwtCtrl.verifyToken, employeeCtrl.getEmployees) // GET A
  *       - Bearer: []
  *     responses:
  *       200:
- *         description: Successfully employee found
+ *         description: Successfully get employee
  *         content:
  *           application/json:
  *             schema:
+ *               type: array
+ *               items:
  *               $ref: '#/components/schemas/Employee'
- *       400:
- *         description: Employee not found!
+*             example:
+ *               employee:
+ *                  - id: 90acb06b-3dea-4483-b106-e85f30a2b986
+ *                    name: JuPegro
+ *                    lastname: Developer
+ *                    positionId: e97bfbe8-c334-495a-8edf-91d5cf47d5fe
+ *                    salary: "108002.23"
+ *                    status: INACTIVE
+ *                    createdAt: "2024-07-05T00:42:17.715Z"
+ *                    updatedAt: "2024-07-05T00:42:17.715Z"
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BadRequest'
+ *       403:
+ *         description: No token provided
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Forbidden'
  *       500:
- *         description: Internal server error 
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InternalServer'
  * 
  */
 
@@ -156,15 +236,37 @@ router.get("/employee/:id", jwtCtrl.verifyToken, employeeCtrl.getEmployeeById) /
  *                 example: 108256.32
  *     responses:
  *       200:
- *         description: Successfully update
+ *         description: Successfully update employee
  *         content:
  *           application/json:
  *             schema:
+ *               type: array
+ *               items:
  *               $ref: '#/components/schemas/Employee'
  *       400:
- *         description: Employee or code already in use!
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BadRequest'
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/NotFound'
+ *       403:
+ *         description: No token provided
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Forbidden'
  *       500:
- *         description: Internal server error 
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InternalServer'
  * 
  */
 
@@ -188,11 +290,39 @@ router.put('/employee/:id', [jwtCtrl.verifyToken], employeeCtrl.updateEmployee) 
  *       - Bearer: []
  *     responses:
  *       200:
- *         description: Successfully status changed
+ *         description: Successfully change status employee
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                  message:
+ *                    type: string
+ *                    example: Status change to 'ACTIVE'
  *       400:
- *         description: Employee not found!
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BadRequest'
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/NotFound'
+ *       403:
+ *         description: No token provided
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Forbidden'
  *       500:
- *         description: Internal server error 
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InternalServer'
  * 
  */
 
@@ -217,10 +347,38 @@ router.put('/employee/:id/status', [jwtCtrl.verifyToken], employeeCtrl.changeSta
  *     responses:
  *       200:
  *         description: Successfully deleted employee
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                  message:
+ *                    type: string
+ *                    example: Successfully deleted employee
  *       400:
- *         description: Bad request
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BadRequest'
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/NotFound'
+ *       403:
+ *         description: No token provided
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Forbidden'
  *       500:
- *         description: Internal server error 
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InternalServer'
  * 
  */
 

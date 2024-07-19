@@ -12,6 +12,17 @@ export const createEmployee = async (req, res, nex) => {
     // VALIDATE EMPTY FIELDS
     if (error) return res.status(400).json({ error: error.details[0].message });
 
+    // CHECK EXISTS POSITIONID
+    const validPosition = await prisma.position.findUnique({
+      where: { id: value.positionId },
+    });
+
+    // IF NOT VALID
+    if (!validPosition)
+      return res
+        .status(404)
+        .json({ message: "The placed position is invalid" });
+
     // INSERT IN DATABASE
     const employee = await prisma.employee.create({
       data: value,
@@ -70,11 +81,31 @@ export const updateEmployee = async (req, res, nex) => {
     // CHECK ID PROVIDED
     if (!id) return res.status(400).json({ message: "Id not provided" });
 
+    // CHECK EMPLOYEE EXISTS
+    const findEmployee = await prisma.employee.findUnique({
+      where: { id: id },
+    });
+
+    // IF NOT FOUND EMPLOYEE
+    if (!findEmployee)
+      return res.status(404).json({ message: "Employee not found!" });
+
     // VALIDATE BODY WITH JOI
     const { error, value } = employeeValidation.validate(req.body);
 
     // VALIDATE EMPTY FIELDS
     if (error) return res.status(400).json({ error: error.details[0].message });
+
+    // CHECK EXISTS POSITIONID
+    const validPosition = await prisma.position.findUnique({
+      where: { id: value.positionId },
+    });
+
+    // IF NOT VALID
+    if (!validPosition)
+      return res
+        .status(404)
+        .json({ message: "The placed position is invalid" });
 
     // UPDATE EMPLOYEE IN DATABASE
     const employee = await prisma.employee.update({
@@ -85,7 +116,7 @@ export const updateEmployee = async (req, res, nex) => {
     });
 
     return res
-      .status(202)
+      .status(200)
       .json({ message: "Updated employee sucessfully", employee });
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -131,6 +162,10 @@ export const changeStatusEmployee = async (req, res, nex) => {
     const employee = await prisma.employee.findUnique({
       where: { id: id },
     });
+
+    // IF NOT FOUND EMPLOYEE
+    if (!employee)
+      return res.status(404).json({ message: "Employee not found!" });
 
     // CHANGE STATUS WITH TERNARY
     const change = await prisma.employee.update({

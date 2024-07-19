@@ -343,7 +343,7 @@ const swaggerDefinition = {
       InternalServer: {
         type: "object",
         properties: {
-          Error: {
+          error: {
             type: "string",
             example: "Internal server error",
           },
@@ -352,7 +352,7 @@ const swaggerDefinition = {
       BadRequest: {
         type: "object",
         properties: {
-          Message: {
+          message: {
             type: "string",
             example: "Bad request!",
           },
