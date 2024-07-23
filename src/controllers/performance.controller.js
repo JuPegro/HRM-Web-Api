@@ -33,7 +33,6 @@ export const createPerformance = async (req, res, nex) => {
     if (!reviewer)
       return res.status(404).json({ message: "Reviewer not found!" });
 
-
     // CREATE PERFORMANCE IN DATABASE
     const performance = await prisma.performance.create({
       data: value,
@@ -92,11 +91,38 @@ export const updatePeformance = async (req, res, nex) => {
     // CHECK ID PROVIDED
     if (!id) return res.status(400).json({ message: "Id not provided" });
 
+    // FOUND EXISTS PERFORMANCE
+    const findPerformance = await prisma.performance.findUnique({
+      where: { id: id },
+    });
+
+    // IF NOT FOUND PERFORMANCE
+    if (!findPerformance)
+      return res.status(404).json({ message: "Performance not found" });
+
     // VALIDATE BODY WITH JOI
     const { error, value } = performanceValidation.validate(req.body);
 
     // VALIDATE EMPTY FIELDS
     if (error) return res.status(400).json({ error: error.details[0].message });
+
+    // FOUND EXISTS EMPLOYEE
+    const findEmployee = await prisma.employee.findUnique({
+      where: { id: value.employeeId },
+    });
+
+    // IF NOT FOUND EMPLOYEE
+    if (!findEmployee)
+      return res.status(404).json({ message: "Employee not found" });
+
+    // FOUND EXISTS REVIEWER
+    const findReviewer = await prisma.reviewer.findUnique({
+      where: { id: value.reviewerId },
+    });
+
+    // IF NOT FOUND REVIEWER
+    if (!findReviewer)
+      return res.status(404).json({ message: "Reviewer not found" });
 
     // UPDATE PERFORMANCE IN DATABASE
     const performance = await prisma.performance.update({
@@ -107,7 +133,7 @@ export const updatePeformance = async (req, res, nex) => {
     });
 
     return res
-      .status(202)
+      .status(200)
       .json({ message: "Updated performance sucessfully", performance });
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -135,7 +161,9 @@ export const deletePerformance = async (req, res, nex) => {
       where: { id: id },
     });
 
-    return res.status(200).json({ message: "Deleted performance successfully" });
+    return res
+      .status(200)
+      .json({ message: "Successfully deleted performance" });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -150,7 +178,11 @@ export const changeStatusPerformance = async (req, res, nex) => {
     if (!id) return res.status(400).json({ message: "Id not provided" });
 
     // GET DATA PERFORMANCE
-    const performance = await prisma.performance.findUnique({ where: { id: id } });
+    const performance = await prisma.performance.findUnique({
+      where: { id: id },
+    });
+
+    if(!performance) return res.status(404).json({message: "Performance not found"})
 
     // CHANGE STATUS WITH TERNARY
     const change = await prisma.performance.update({

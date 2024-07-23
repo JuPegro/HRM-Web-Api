@@ -327,6 +327,10 @@ const swaggerDefinition = {
             type: "string",
             example: "2024-07-10",
           },
+          status: {
+            type: "string",
+            example: "ACTIVE",
+          },
           createdAt: {
             type: "string",
             format: "date-time",

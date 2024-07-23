@@ -24,34 +24,62 @@ import * as performanceCtrl from "../controllers/performance.controller.js";
  *           schema:
  *             type: object
  *             required:
- *               - name
- *               - description
- *               - departmentId
+ *               - employeeId
+ *               - reviewerId
+ *               - score
+ *               - comments
+ *               - date
  *             properties:
- *               name:
+ *               employeeId:
  *                 type: string
- *                 example: Information technology
- *               description:
+ *                 example: 4ac6b8c5-c0d6-46cb-824c-85308635e9df
+ *               reviewerId:
  *                 type: string
- *                 example: an advice service provided by a computer company
- *               departmentId:
+ *                 example: 46842b99-8f25-498e-bd43-69ae48d3f24a
+ *               score:
  *                 type: string
- *                 example: e97bfbe8-c334-495a-8edf-91d5cf47d5fe
+ *                 example: FOUR
+ *               comments:
+ *                 type: string
+ *                 example: Really good employee
+ *               date:
+ *                 type: string
+ *                 example: 2024-07-10
  *     responses:
- *       200:
+ *       201:
  *         description: Successfully created performance
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Performance'
  *       400:
- *         description: Performance name already in use
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BadRequest'
+ *       403:
+ *         description: No token provided
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Forbidden'
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/NotFound'
  *       500:
- *         description: Internal server error 
- * 
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InternalServer'
+ *
  */
 
-router.post('/performance', [jwtCtrl.verifyToken, jwtCtrl.isModerator], performanceCtrl.createPerformance) // CREATE A NEW PERFORMANCE
+router.post('/performance', jwtCtrl.verifyToken, performanceCtrl.createPerformance) // CREATE A NEW PERFORMANCE
 
 /**
  * @swagger
@@ -64,16 +92,58 @@ router.post('/performance', [jwtCtrl.verifyToken, jwtCtrl.isModerator], performa
  *       - Bearer: []
  *     responses:
  *       200:
- *         description: Successfully all performances
+ *         description: Successfully get all performances
  *         content:
  *           application/json:
  *             schema:
+ *               type: array
+ *               items:
  *               $ref: '#/components/schemas/Performance'
+ *             example:
+ *               performances:
+ *                  - id: "b2223ba1-1b75-452e-aa5c-f45f67b79c27"
+ *                    employeeId: "e97bfbe8-c334-495a-8edf-91d5cf47d5fe"
+ *                    reviewerId: "46842b99-8f25-498e-bd43-69ae48d3f24a"
+ *                    score: "FIVE"
+ *                    date: "2024-07-10"
+ *                    comments: "Really good employee"
+ *                    status: "INACTIVE"
+ *                    createdAt: "2024-07-05T00:42:17.715Z"
+ *                    updatedAt: "2024-07-05T00:42:17.715Z"
+ *                  - id: "b2223ba1-1b75-452e-aa5c-f45f67b79c27"
+ *                    employeeId: "46842b99-8f25-498e-bd43-69ae48d3f24a"
+ *                    reviewerId: "e97bfbe8-c334-495a-8edf-91d5cf47d5fe"
+ *                    score: "ONE"
+ *                    date: "2024-07-10"
+ *                    comments: "Really bad employee"
+ *                    status: "ACTIVE"
+ *                    createdAt: "2024-07-05T00:42:17.715Z"
+ *                    updatedAt: "2024-07-05T00:42:17.715Z"
  *       400:
- *         description: Performances not found!
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BadRequest'
+ *       403:
+ *         description: No token provided
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Forbidden'
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/NotFound'
  *       500:
- *         description: Internal server error 
- * 
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InternalServer'
+ *
  */
 
 router.get('/performance', [jwtCtrl.verifyToken], performanceCtrl.getPerformances) // GET ALL PERFORMANCE
@@ -96,16 +166,43 @@ router.get('/performance', [jwtCtrl.verifyToken], performanceCtrl.getPerformance
  *       - Bearer: []
  *     responses:
  *       200:
- *         description: Successfully performance found
+ *         description: Successfully get performance
  *         content:
  *           application/json:
  *             schema:
+ *               type: array
+ *               items:
  *               $ref: '#/components/schemas/Performance'
- *       400:
- *         description: performance not found!
+ *             example:
+ *               performance:
+ *                  - id: "b2223ba1-1b75-452e-aa5c-f45f67b79c27"
+ *                    employeeId: "e97bfbe8-c334-495a-8edf-91d5cf47d5fe"
+ *                    reviewerId: "46842b99-8f25-498e-bd43-69ae48d3f24a"
+ *                    score: "FIVE"
+ *                    date: "2024-07-10"
+ *                    comments: "Really good employee"
+ *                    status: "INACTIVE"
+ *                    createdAt: "2024-07-05T00:42:17.715Z"
+ *                    updatedAt: "2024-07-05T00:42:17.715Z"
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BadRequest'
+ *       403:
+ *         description: No token provided
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Forbidden'
  *       500:
- *         description: Internal server error 
- * 
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InternalServer'
+ *
  */
 
 router.get('/performance/:id', [jwtCtrl.verifyToken], performanceCtrl.getPerformanceById) // GET ONE PERFORMANCE BY ID
@@ -133,34 +230,64 @@ router.get('/performance/:id', [jwtCtrl.verifyToken], performanceCtrl.getPerform
  *           schema:
  *             type: object
  *             required:
- *               - name
- *               - description
- *               - departmentId
+ *               - employeeId
+ *               - reviewerId
+ *               - score
+ *               - comments
+ *               - date
  *             properties:
- *               name:
+ *               employeeId:
  *                 type: string
- *                 example: Information technology
- *               description:
+ *                 example: 4ac6b8c5-c0d6-46cb-824c-85308635e9df
+ *               reviewerId:
  *                 type: string
- *                 example: an advice service provided by a computer company
- *               departmentId:
+ *                 example: 46842b99-8f25-498e-bd43-69ae48d3f24a
+ *               score:
  *                 type: string
- *                 example: e97bfbe8-c334-495a-8edf-91d5cf47d5fe
+ *                 example: FOUR
+ *               comments:
+ *                 type: string
+ *                 example: Really good employee
+ *               date:
+ *                 type: string
+ *                 example: 2024-07-10
  *     responses:
  *       200:
- *         description: Successfully update
+ *         description: Successfully update performance
  *         content:
  *           application/json:
  *             schema:
+ *               type: array
+ *               items:
  *               $ref: '#/components/schemas/Performance'
  *       400:
- *         description: Performance or code already in use!
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BadRequest'
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/NotFound'
+ *       403:
+ *         description: No token provided
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Forbidden'
  *       500:
- *         description: Internal server error 
- * 
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InternalServer'
+ *
  */
 
-router.put('/performance/:id', [jwtCtrl.verifyToken, jwtCtrl.isModerator], performanceCtrl.updatePeformance) // UPDATE PERFORMANCE
+router.put('/performance/:id', jwtCtrl.verifyToken, performanceCtrl.updatePeformance) // UPDATE PERFORMANCE
 
 /**
  * @swagger
@@ -180,12 +307,40 @@ router.put('/performance/:id', [jwtCtrl.verifyToken, jwtCtrl.isModerator], perfo
  *       - Bearer: []
  *     responses:
  *       200:
- *         description: Successfully status changed
+ *         description: Successfully change status performance
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                  message:
+ *                    type: string
+ *                    example: Status change to 'ACTIVE'
  *       400:
- *         description: Performance not found!
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BadRequest'
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/NotFound'
+ *       403:
+ *         description: No token provided
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Forbidden'
  *       500:
- *         description: Internal server error 
- * 
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InternalServer'
+ *
  */
 
 router.put('/performance/:id/status', [jwtCtrl.verifyToken, jwtCtrl.isAdmin], performanceCtrl.changeStatusPerformance) // CHANGE STATUS
@@ -209,11 +364,39 @@ router.put('/performance/:id/status', [jwtCtrl.verifyToken, jwtCtrl.isAdmin], pe
  *     responses:
  *       200:
  *         description: Successfully deleted performance
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                  message:
+ *                    type: string
+ *                    example: Successfully deleted performance
  *       400:
- *         description: Bad request
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BadRequest'
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/NotFound'
+ *       403:
+ *         description: No token provided
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Forbidden'
  *       500:
- *         description: Internal server error 
- * 
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InternalServer'
+ *
  */
 
 router.delete('/performance/:id', [jwtCtrl.verifyToken, jwtCtrl.isAdmin], performanceCtrl.deletePerformance) // DELETE PERFORMANCE
