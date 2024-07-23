@@ -361,7 +361,7 @@ const swaggerDefinition = {
       NotFound: {
         type: "object",
         properties: {
-          Message: {
+          message: {
             type: "string",
             example: "Item not found!",
           },

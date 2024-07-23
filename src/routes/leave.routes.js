@@ -28,7 +28,6 @@ import * as leaveCtrl from "../controllers/leave.controller.js";
  *               - startDate
  *               - endDate
  *               - reason
- *               - status
  *             properties:
  *               employeeId:
  *                 type: string
@@ -42,9 +41,6 @@ import * as leaveCtrl from "../controllers/leave.controller.js";
  *               reason:
  *                 type: string
  *                 example: I will take my vacation
- *               status:
- *                 type: string
- *                 example: PENDING
  *     responses:
  *       201:
  *         description: Successfully created leave

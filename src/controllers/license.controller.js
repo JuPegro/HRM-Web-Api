@@ -53,7 +53,8 @@ export const getLicenseById = async (req, res, nex) => {
     });
 
     // CHECK USER FOUND
-    if (!license) return res.status(404).json({ message: "License not found!" });
+    if (!license)
+      return res.status(404).json({ message: "License not found!" });
 
     return res.status(200).json({ license: license });
   } catch (error) {
@@ -73,8 +74,24 @@ export const updateLicense = async (req, res, nex) => {
     // VALIDATE BODY WITH JOI
     const { error, value } = licenseValidation.validate(req.body);
 
+    // FOUND LICENSE EXISTS
+    const findLicense = await prisma.license.findUnique({ where: { id: id } });
+
+    // IF NOT FOUND LICENSE
+    if (!findLicense)
+      return res.status(404).json({ message: "License not found!" });
+
     // VALIDATE EMPTY FIELDS
     if (error) return res.status(400).json({ error: error.details[0].message });
+
+    // VERIFY VALID EMPLOYEEID
+    const findEmployee = await prisma.employee.findUnique({
+      where: { id: value.employeeId },
+    });
+
+    // IF NOT VALID EMPLOYEE ID
+    if (!findEmployee)
+      return res.status(404).json({ message: "This employee is invalid" });
 
     // UPDATE LICENSE IN DATABASE
     const license = await prisma.license.update({
@@ -85,7 +102,7 @@ export const updateLicense = async (req, res, nex) => {
     });
 
     return res
-      .status(202)
+      .status(200)
       .json({ message: "Updated license sucessfully", license });
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -105,7 +122,8 @@ export const deleteLicense = async (req, res, nex) => {
       where: { id: id },
     });
 
-    if (!license) return res.status(404).json({ message: "License not found!" });
+    if (!license)
+      return res.status(404).json({ message: "License not found!" });
 
     // DELETE LICENSE IN DATABASE
     await prisma.license.delete({
@@ -137,7 +155,8 @@ export const changeStatusLicense = async (req, res, nex) => {
     const license = await prisma.license.findUnique({ where: { id: id } });
 
     // IF NOT FOUND
-    if (!license) return res.status(404).json({ message: "License not found!" });
+    if (!license)
+      return res.status(404).json({ message: "License not found!" });
 
     // CHANGE STATUS IN DATABASE
     const change = await prisma.license.update({

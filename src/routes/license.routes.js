@@ -24,34 +24,58 @@ import * as licenseCtrl from "../controllers/license.controller.js";
  *           schema:
  *             type: object
  *             required:
- *               - name
- *               - description
- *               - departmentId
+ *               - employeeId
+ *               - startDate
+ *               - endDate
+ *               - reason
  *             properties:
- *               name:
+ *               employeeId:
  *                 type: string
- *                 example: Information technology
- *               description:
+ *                 example: 31da9deb-e098-45be-8c9a-42d6704f81fc
+ *               startDate:
  *                 type: string
- *                 example: an advice service provided by a computer company
- *               departmentId:
+ *                 example: 2024-07-10
+ *               endDate:
  *                 type: string
- *                 example: e97bfbe8-c334-495a-8edf-91d5cf47d5fe
+ *                 example: 2024-07-11
+ *               reason:
+ *                 type: string
+ *                 example: I will take my vacation
  *     responses:
- *       200:
+ *       201:
  *         description: Successfully created license
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/License'
  *       400:
- *         description: License name already in use
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BadRequest'
+ *       403:
+ *         description: No token provided
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Forbidden'
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/NotFound'
  *       500:
- *         description: Internal server error 
- * 
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InternalServer'
+ *
  */
 
-router.post('/license', [jwtCtrl.verifyToken, jwtCtrl.isModerator], licenseCtrl.createLicense) // CREATE NEW LICENSE
+router.post('/license', jwtCtrl.verifyToken, licenseCtrl.createLicense) // CREATE NEW LICENSE
 
 /**
  * @swagger
@@ -64,16 +88,56 @@ router.post('/license', [jwtCtrl.verifyToken, jwtCtrl.isModerator], licenseCtrl.
  *       - Bearer: []
  *     responses:
  *       200:
- *         description: Successfully all licenses
+ *         description: Successfully get all licenses
  *         content:
  *           application/json:
  *             schema:
+ *               type: array
+ *               items:
  *               $ref: '#/components/schemas/License'
+ *             example:
+ *               licenses:
+ *                  - id: "b2223ba1-1b75-452e-aa5c-f45f67b79c27"
+ *                    employeeId: "e97bfbe8-c334-495a-8edf-91d5cf47d5fe"
+ *                    startDate: "2024-07-10"
+ *                    endDate: "2024-07-11"
+ *                    reason: "vacation"
+ *                    status: "ACTIVE"
+ *                    createdAt: "2024-07-05T00:42:17.715Z"
+ *                    updatedAt: "2024-07-05T00:42:17.715Z"
+ *                  - id: "b2223ba1-1b75-452e-aa5c-f45f67b79c27"
+ *                    employeeId: "e97bfbe8-c334-495a-8edf-91d5cf47d5fe"
+ *                    startDate: "2024-07-10"
+ *                    endDate: "2024-07-11"
+ *                    reason: "vacation"
+ *                    status: "ACTIVE"
+ *                    createdAt: "2024-07-05T00:42:17.715Z"
+ *                    updatedAt: "2024-07-05T00:42:17.715Z"
  *       400:
- *         description: Licenses not found!
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BadRequest'
+ *       403:
+ *         description: No token provided
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Forbidden'
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/NotFound'
  *       500:
- *         description: Internal server error 
- * 
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InternalServer'
+ *
  */
 
 router.get("/license", jwtCtrl.verifyToken, licenseCtrl.getLicense) // GET ALL LICENSE
@@ -96,16 +160,42 @@ router.get("/license", jwtCtrl.verifyToken, licenseCtrl.getLicense) // GET ALL L
  *       - Bearer: []
  *     responses:
  *       200:
- *         description: Successfully license found
+ *         description: Successfully get license
  *         content:
  *           application/json:
  *             schema:
+ *               type: array
+ *               items:
  *               $ref: '#/components/schemas/License'
- *       400:
- *         description: License not found!
+ *             example:
+ *               license:
+ *                  - id: "b2223ba1-1b75-452e-aa5c-f45f67b79c27"
+ *                    employeeId: "e97bfbe8-c334-495a-8edf-91d5cf47d5fe"
+ *                    startDate: "2024-07-10"
+ *                    endDate: "2024-07-11"
+ *                    reason: "vacation"
+ *                    status: "ACTIVE"
+ *                    createdAt: "2024-07-05T00:42:17.715Z"
+ *                    updatedAt: "2024-07-05T00:42:17.715Z"
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BadRequest'
+ *       403:
+ *         description: No token provided
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Forbidden'
  *       500:
- *         description: Internal server error 
- * 
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InternalServer'
+ *
  */
 
 router.get("/license/:id", jwtCtrl.verifyToken, licenseCtrl.getLicenseById) // GET A ONE LICENSE
@@ -133,34 +223,60 @@ router.get("/license/:id", jwtCtrl.verifyToken, licenseCtrl.getLicenseById) // G
  *           schema:
  *             type: object
  *             required:
- *               - name
- *               - description
- *               - departmentId
+ *               - employeeId
+ *               - startDate
+ *               - endDate
+ *               - reason
  *             properties:
- *               name:
+ *               employeeId:
  *                 type: string
- *                 example: Information technology
- *               description:
+ *                 example: 31da9deb-e098-45be-8c9a-42d6704f81fc
+ *               startDate:
  *                 type: string
- *                 example: an advice service provided by a computer company
- *               departmentId:
+ *                 example: 2024-07-10
+ *               endDate:
  *                 type: string
- *                 example: e97bfbe8-c334-495a-8edf-91d5cf47d5fe
+ *                 example: 2024-07-11
+ *               reason:
+ *                 type: string
+ *                 example: I will take my vacation
  *     responses:
  *       200:
- *         description: Successfully update
+ *         description: Successfully update license
  *         content:
  *           application/json:
  *             schema:
+ *               type: array
+ *               items:
  *               $ref: '#/components/schemas/License'
  *       400:
- *         description: License or code already in use!
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BadRequest'
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/NotFound'
+ *       403:
+ *         description: No token provided
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Forbidden'
  *       500:
- *         description: Internal server error 
- * 
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InternalServer'
+ *
  */
 
-router.put('/license/:id', [jwtCtrl.verifyToken, jwtCtrl.isModerator], licenseCtrl.updateLicense) // UPDATE A LICENSE
+router.put('/license/:id', jwtCtrl.verifyToken, licenseCtrl.updateLicense) // UPDATE A LICENSE
 
 /**
  * @swagger
@@ -175,20 +291,59 @@ router.put('/license/:id', [jwtCtrl.verifyToken, jwtCtrl.isModerator], licenseCt
  *         required: true
  *         schema:
  *           type: string
- *         description: ID of the license to get
+ *         description: ID of the license to update
  *     security:
  *       - Bearer: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - status
+ *             properties:
+ *               status:
+ *                 type: string
+ *                 example: PENDING
  *     responses:
  *       200:
- *         description: Successfully status changed
+ *         description: Successfully change status license
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                  message:
+ *                    type: string
+ *                    example: Status change to PENDING
  *       400:
- *         description: License not found!
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BadRequest'
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/NotFound'
+ *       403:
+ *         description: No token provided
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Forbidden'
  *       500:
- *         description: Internal server error 
- * 
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InternalServer'
  */
 
-router.put('/license/:id/status', [jwtCtrl.verifyToken], jwtCtrl.isAdmin, licenseCtrl.changeStatusLicense) // CHANGE STATUS
+router.put('/license/:id/status', [jwtCtrl.verifyToken, jwtCtrl.isAdmin], licenseCtrl.changeStatusLicense) // CHANGE STATUS
 
 /**
  * @swagger
@@ -209,11 +364,39 @@ router.put('/license/:id/status', [jwtCtrl.verifyToken], jwtCtrl.isAdmin, licens
  *     responses:
  *       200:
  *         description: Successfully deleted license
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                  message:
+ *                    type: string
+ *                    example: Successfully deleted license
  *       400:
- *         description: Bad request
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BadRequest'
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/NotFound'
+ *       403:
+ *         description: No token provided
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Forbidden'
  *       500:
- *         description: Internal server error 
- * 
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InternalServer'
+ *
  */
 
 router.delete('/license/:id', [jwtCtrl.verifyToken, jwtCtrl.isAdmin], licenseCtrl.deleteLicense) // DELETE A LICENSE
