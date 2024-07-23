@@ -249,6 +249,10 @@ const swaggerDefinition = {
             type: "string",
             example: "vacation",
           },
+          status: {
+            type: "string",
+            example: "ACTIVE",
+          },
           createdAt: {
             type: "string",
             format: "date-time",
@@ -279,6 +283,10 @@ const swaggerDefinition = {
           amount: {
             type: "string",
             example: "67890.00",
+          },
+          status: {
+            type: "string",
+            example: "ACTIVE",
           },
           createdAt: {
             type: "string",

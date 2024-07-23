@@ -83,6 +83,13 @@ export const updatePayroll = async (req, res, nex) => {
     // CHECK ID PROVIDED
     if (!id) return res.status(400).json({ message: "Id not provided" });
 
+    // FOUND PAYROLL EXISTS
+    const findPayroll = await prisma.payroll.findUnique({ where: { id: id } });
+
+    // IF NOT FOUND PAYROLL
+    if (!findPayroll)
+      return res.status(404).json({ message: "Payroll not found!" });
+
     // VALIDATE BODY WITH JOI
     const { error, value } = payrollValidation.validate(req.body);
 
@@ -112,7 +119,7 @@ export const updatePayroll = async (req, res, nex) => {
     });
 
     return res
-      .status(202)
+      .status(200)
       .json({ message: "Updated payroll sucessfully", payroll });
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -140,7 +147,7 @@ export const deletePayroll = async (req, res, nex) => {
       where: { id: id },
     });
 
-    return res.status(200).json({ message: "Deleted payroll successfully" });
+    return res.status(200).json({ message: "Successfully deleted payroll" });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

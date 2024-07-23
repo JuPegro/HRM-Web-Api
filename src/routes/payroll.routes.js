@@ -5,7 +5,7 @@ const router = Router();
 // IMPORT JWT CONTROLLER
 import * as jwtCtrl from "../middlewares/authJwt.js";
 
-// IMPORT LICENSE CONTROLLER
+// IMPORT PAYROLL CONTROLLER
 import * as payrollCtrl from "../controllers/payroll.controller.js";
 
 
@@ -25,34 +25,50 @@ import * as payrollCtrl from "../controllers/payroll.controller.js";
  *           schema:
  *             type: object
  *             required:
- *               - name
- *               - description
- *               - departmentId
+ *               - employeeId
+ *               - date
  *             properties:
- *               name:
+ *               employeeId:
  *                 type: string
- *                 example: Information technology
- *               description:
+ *                 example: 31da9deb-e098-45be-8c9a-42d6704f81fc
+ *               date:
  *                 type: string
- *                 example: an advice service provided by a computer company
- *               departmentId:
- *                 type: string
- *                 example: e97bfbe8-c334-495a-8edf-91d5cf47d5fe
+ *                 example: 2024-07-10
  *     responses:
- *       200:
+ *       201:
  *         description: Successfully created payroll
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Payroll'
  *       400:
- *         description: Payroll name already in use
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BadRequest'
+ *       403:
+ *         description: No token provided
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Forbidden'
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/NotFound'
  *       500:
- *         description: Internal server error 
- * 
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InternalServer'
+ *
  */
 
-router.post('/payroll', [jwtCtrl.verifyToken, jwtCtrl.isModerator], payrollCtrl.createPayroll) // CREATE NEW PAYROLL
+router.post('/payroll', jwtCtrl.verifyToken, payrollCtrl.createPayroll) // CREATE NEW PAYROLL
 
 /**
  * @swagger
@@ -65,16 +81,54 @@ router.post('/payroll', [jwtCtrl.verifyToken, jwtCtrl.isModerator], payrollCtrl.
  *       - Bearer: []
  *     responses:
  *       200:
- *         description: Successfully all payrolls
+ *         description: Successfully get all payrolls
  *         content:
  *           application/json:
  *             schema:
+ *               type: array
+ *               items:
  *               $ref: '#/components/schemas/Payroll'
+ *             example:
+ *               payrolls:
+ *                  - id: "b2223ba1-1b75-452e-aa5c-f45f67b79c27"
+ *                    employeeId: "e97bfbe8-c334-495a-8edf-91d5cf47d5fe"
+ *                    date: "2024-07-10"
+ *                    amount: "24990.78"
+ *                    status: "INACTIVE"
+ *                    createdAt: "2024-07-05T00:42:17.715Z"
+ *                    updatedAt: "2024-07-05T00:42:17.715Z"
+ *                  - id: "b2223jh1-1b75-452e-aa5c-f45f67b79iko"
+ *                    employeeId: "e97bfbe8-c334-495a-8edf-91d5cf47d5fe"
+ *                    date: "2024-12-05"
+ *                    amount: "38800.78"
+ *                    status: "ACTIVE"
+ *                    createdAt: "2024-07-05T00:42:17.715Z"
+ *                    updatedAt: "2024-07-05T00:42:17.715Z"
  *       400:
- *         description: PayrollS not found!
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BadRequest'
+ *       403:
+ *         description: No token provided
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Forbidden'
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/NotFound'
  *       500:
- *         description: Internal server error 
- * 
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InternalServer'
+ *
  */
 
 router.get("/payroll", jwtCtrl.verifyToken, payrollCtrl.getPayrolls) // GET ALL PAYROLLS
@@ -97,16 +151,41 @@ router.get("/payroll", jwtCtrl.verifyToken, payrollCtrl.getPayrolls) // GET ALL 
  *       - Bearer: []
  *     responses:
  *       200:
- *         description: Successfully payroll found
+ *         description: Successfully get payroll
  *         content:
  *           application/json:
  *             schema:
+ *               type: array
+ *               items:
  *               $ref: '#/components/schemas/Payroll'
- *       400:
- *         description: payroll not found!
+ *             example:
+ *               payroll:
+ *                  - id: "b2223jh1-1b75-452e-aa5c-f45f67b79iko"
+ *                    employeeId: "e97bfbe8-c334-495a-8edf-91d5cf47d5fe"
+ *                    date: "2024-12-05"
+ *                    amount: "38800.78"
+ *                    status: "ACTIVE"
+ *                    createdAt: "2024-07-05T00:42:17.715Z"
+ *                    updatedAt: "2024-07-05T00:42:17.715Z"
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BadRequest'
+ *       403:
+ *         description: No token provided
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Forbidden'
  *       500:
- *         description: Internal server error 
- * 
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InternalServer'
+ *
  */
 
 router.get("/payroll/:id", jwtCtrl.verifyToken, payrollCtrl.getPayrollById) // GET A ONE PAYROLL
@@ -134,34 +213,52 @@ router.get("/payroll/:id", jwtCtrl.verifyToken, payrollCtrl.getPayrollById) // G
  *           schema:
  *             type: object
  *             required:
- *               - name
- *               - description
- *               - departmentId
+ *               - employeeId
+ *               - date
  *             properties:
- *               name:
+ *               employeeId:
  *                 type: string
- *                 example: Information technology
- *               description:
+ *                 example: 31da9deb-e098-45be-8c9a-42d6704f81fc
+ *               date:
  *                 type: string
- *                 example: an advice service provided by a computer company
- *               departmentId:
- *                 type: string
- *                 example: e97bfbe8-c334-495a-8edf-91d5cf47d5fe
+ *                 example: 2024-07-10
  *     responses:
  *       200:
- *         description: Successfully update
+ *         description: Successfully update payroll
  *         content:
  *           application/json:
  *             schema:
+ *               type: array
+ *               items:
  *               $ref: '#/components/schemas/Payroll'
  *       400:
- *         description: Payroll or code already in use!
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BadRequest'
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/NotFound'
+ *       403:
+ *         description: No token provided
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Forbidden'
  *       500:
- *         description: Internal server error 
- * 
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InternalServer'
+ *
  */
 
-router.put('/payroll/:id', [jwtCtrl.verifyToken, jwtCtrl.isModerator], payrollCtrl.updatePayroll) // UPDATE A PAYROLL
+router.put('/payroll/:id', jwtCtrl.verifyToken, payrollCtrl.updatePayroll) // UPDATE A PAYROLL
 
 /**
  * @swagger
@@ -181,15 +278,44 @@ router.put('/payroll/:id', [jwtCtrl.verifyToken, jwtCtrl.isModerator], payrollCt
  *       - Bearer: []
  *     responses:
  *       200:
- *         description: Successfully status changed
+ *         description: Successfully change status payroll
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                  message:
+ *                    type: string
+ *                    example: Status change to 'ACTIVE'
  *       400:
- *         description: Payroll not found!
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BadRequest'
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/NotFound'
+ *       403:
+ *         description: No token provided
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Forbidden'
  *       500:
- *         description: Internal server error 
- * 
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InternalServer'
+ *
  */
 
 router.put('/payroll/:id/status', [jwtCtrl.verifyToken, jwtCtrl.isAdmin], payrollCtrl.changeStatusPayroll) // CHANGE STATUS
+
 
 /**
  * @swagger
@@ -210,11 +336,39 @@ router.put('/payroll/:id/status', [jwtCtrl.verifyToken, jwtCtrl.isAdmin], payrol
  *     responses:
  *       200:
  *         description: Successfully deleted payroll
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                  message:
+ *                    type: string
+ *                    example: Successfully deleted payroll
  *       400:
- *         description: Bad request
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BadRequest'
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/NotFound'
+ *       403:
+ *         description: No token provided
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Forbidden'
  *       500:
- *         description: Internal server error 
- * 
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InternalServer'
+ *
  */
 
 router.delete('/payroll/:id', [jwtCtrl.verifyToken, jwtCtrl.isAdmin], payrollCtrl.deletePayroll) // DELETE A PAYROLL
