@@ -7,9 +7,11 @@ import * as authCtrl from "../controllers/auth.controller.js";
  * @swagger
  * /api/auth/signin:
  *   post:
- *     summary: Sign in to the application
+ *     summary: Create a new auth
  *     tags:
  *       - Auth
+ *     security:
+ *       - Bearer: []
  *     requestBody:
  *       required: true
  *       content:
@@ -22,10 +24,10 @@ import * as authCtrl from "../controllers/auth.controller.js";
  *             properties:
  *               email:
  *                 type: string
- *                 example: Admin@example.com
+ *                 example: JuPegro@example.com
  *               password:
  *                 type: string
- *                 example: AdminPassword
+ *                 example: Password!@2024
  *     responses:
  *       200:
  *         description: Successfully signed in
@@ -33,10 +35,24 @@ import * as authCtrl from "../controllers/auth.controller.js";
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/SignInResponse'
- *       400:
- *         description: Invalid email or password
+ *       401:
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BadRequest'
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/NotFound'
  *       500:
- *         description: Internal server error 
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InternalServer'
  * 
  */
 

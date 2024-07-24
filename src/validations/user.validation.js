@@ -23,7 +23,7 @@ export const userValidation = Joi.object({
     "any.required": "Email is required",
   }),
   password: Joi.string()
-    .min(8) // Longitud mínima de 8 caracteres
+    .min(8)
     .pattern(new RegExp("^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,}$"))
     .required()
     .messages({
