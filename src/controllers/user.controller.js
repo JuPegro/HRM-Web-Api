@@ -57,6 +57,12 @@ export const updateUser = async (req, res, next) => {
     // CHECK ID PROVIDED
     if (!id) return res.status(400).json({ message: "Id not provided" });
 
+    // CHECK USER EXISTS IN DATABASE
+    const findUser = await prisma.user.findUnique({ where: { id: id } });
+
+    // IF NOT FOUND
+    if (!findUser) return res.status(404).json({ message: "User not found" });
+
     // VALIDATE BODY WITH JOI
     const { error, value } = userValidation.validate(req.body);
 
@@ -122,7 +128,7 @@ export const deleteUser = async (req, res, next) => {
       where: { id: id },
     });
 
-    return res.status(200).json({ message: "Deleted user successfully" });
+    return res.status(200).json({ message: "Successfully deleted user" });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
