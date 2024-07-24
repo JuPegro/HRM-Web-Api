@@ -22,6 +22,15 @@ export const createPosition = async (req, res, nex) => {
     if (uniqueField)
       return res.status(400).json({ message: "Position name already in use!" });
 
+    // CHECK DEPARTMENT EXISTS
+    const findDepartment = await prisma.department.findUnique({
+      where: { id: value.departmentId },
+    });
+
+    // IF NOT FOUND
+    if (!findDepartment)
+      return res.status(404).json({ message: "Department not found" });
+
     const position = await prisma.position.create({
       data: value,
     });
@@ -95,7 +104,17 @@ export const updatePosition = async (req, res, nex) => {
     });
 
     // IF UNIQUE FIELDS IN BODY
-    if (uniqueFields) return res.status(400).json({ message: "Position name already in use!" });
+    if (uniqueFields)
+      return res.status(400).json({ message: "Position name already in use!" });
+
+    // CHECK DEPARTMENT EXISTS
+    const findDepartment = await prisma.department.findUnique({
+      where: { id: value.departmentId },
+    });
+
+    // IF NOT FOUND
+    if (!findDepartment)
+      return res.status(404).json({ message: "Department not found" });
 
     // UPDATE POSITION IN DATABASE
     const position = await prisma.position.update({
@@ -106,7 +125,7 @@ export const updatePosition = async (req, res, nex) => {
     });
 
     return res
-      .status(202)
+      .status(200)
       .json({ message: "Updated position sucessfully", position });
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -150,6 +169,10 @@ export const changeStatusPosition = async (req, res, nex) => {
 
     // GET DATA POSITION
     const position = await prisma.position.findUnique({ where: { id: id } });
+
+    // IF NOT FOUND
+    if (!position)
+      return res.status(404).json({ message: "Position not found" });
 
     // CHANGE STATUS WITH TERNARY
     const change = await prisma.position.update({
