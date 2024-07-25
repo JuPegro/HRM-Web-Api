@@ -35,7 +35,7 @@ import * as authCtrl from "../controllers/auth.controller.js";
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/SignInResponse'
- *       401:
+ *       400:
  *         description: Bad Request
  *         content:
  *           application/json:
