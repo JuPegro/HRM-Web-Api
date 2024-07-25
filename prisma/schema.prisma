@@ -43,7 +43,7 @@ model Employee {
   reviewer    Reviewer[]
   leave       Leave[]
   license     License[]
-  position    Position      @relation(fields: [positionId], references: [id])
+  position    Position      @relation(fields: [positionId], references: [id], onDelete: Cascade)
 }
 
 // TABLE POSITION
@@ -57,7 +57,7 @@ model Position {
   updatedAt    DateTime? @updatedAt
 
   // NAVIGATION PROPERTYS
-  department Department @relation(fields: [departmentId], references: [id])
+  department Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
   employee   Employee[]
 }
 
@@ -86,7 +86,7 @@ model Payroll {
   updatedAt  DateTime? @updatedAt
 
   // NAVIGATION PROPERTYS
-  employee Employee @relation(fields: [employeeId], references: [id])
+  employee Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
 }
 
 // TABLE PERFORMANCE
@@ -102,8 +102,8 @@ model Performance {
   updatedAt  DateTime? @updatedAt
 
   // NAVIGATION PROPERTYS
-  employee Employee @relation(fields: [employeeId], references: [id])
-  reviewer Reviewer @relation(fields: [reviewerId], references: [id])
+  reviewer Reviewer @relation(fields: [reviewerId], references: [id], onDelete: Cascade)
+  employee Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
 }
 
 // TABLE REVIEWER
@@ -116,8 +116,8 @@ model Reviewer {
   updatedAt    DateTime? @updatedAt
 
   // NAVIGATION PROPERTYS
-  department  Department    @relation(fields: [departmentId], references: [id])
-  employee    Employee      @relation(fields: [employeeId], references: [id])
+  department  Department    @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  employee    Employee      @relation(fields: [employeeId], references: [id], onDelete: Cascade)
   performance Performance[]
 }
 
@@ -133,7 +133,7 @@ model Leave {
   updatedAt  DateTime? @updatedAt
 
   // NAVIGATION PROPERTYS
-  employee Employee @relation(fields: [employeeId], references: [id])
+  employee Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
 }
 
 // TABLE LICENSE
@@ -148,16 +148,7 @@ model License {
   updatedAt  DateTime? @updatedAt
 
   // NAVIGATION PROPERTYS
-  employee Employee @relation(fields: [employeeId], references: [id])
-}
-
-// TABLE REPORT
-model Report {
-  id        String    @id @default(uuid())
-  title     String
-  content   String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @updatedAt
+  employee Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
 }
 
 // ENUMS TABLES
@@ -179,10 +170,10 @@ enum Progress {
 }
 
 enum Score {
-  CERO
-  UNO
-  DOS
-  TRES
-  CUATRO
-  CINCO
+  ZERO
+  ONE
+  TWO
+  THREE
+  FOUR
+  FIVE
 }
